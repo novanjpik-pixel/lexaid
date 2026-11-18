@@ -14,11 +14,11 @@ const json = (obj, status = 200) =>
 
 async function analyze(request) {
   const env = (typeof process !== "undefined" && process.env) || {};
+  if (env.ACCESS_CODE && request.headers.get("x-access-code") !== env.ACCESS_CODE)
+    return json({ error: "Kode akses salah." }, 401);
   const useOllama = !!(env.OLLAMA_BASE_URL || env.OLLAMA_API_KEY || env.OLLAMA_MODEL);
   if (!useOllama && !env.ANTHROPIC_API_KEY)
     return json({ error: "Belum ada penyedia AI. Atur OLLAMA_API_KEY (atau ANTHROPIC_API_KEY) di secret server." }, 500);
-  if (env.ACCESS_CODE && request.headers.get("x-access-code") !== env.ACCESS_CODE)
-    return json({ error: "Kode akses salah." }, 401);
 
   let body;
   try { body = await request.json(); } catch (e) { return json({ error: "Permintaan tidak valid." }, 400); }
@@ -82,4 +82,33 @@ async function handler(request) {
   return new Response(HTML, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" } });
 }
 
-addEventListener("fetch", (event) => event.respondWith(handler(event.request)));
+if (typeof addEventListener === "function") {
+  // Mode WinterJS (Service Worker)
+  addEventListener("fetch", (event) => event.respondWith(handler(event.request)));
+} else {
+  // Mode Node.js (preset node-base di Wasmer, atau dijalankan lokal)
+  const http = require("node:http");
+  const port = Number(process.env.PORT) || 8080;
+  http
+    .createServer(async (req, res) => {
+      try {
+        const chunks = [];
+        for await (const c of req) chunks.push(c);
+        const body = Buffer.concat(chunks);
+        const headers = new Headers();
+        for (const [k, v] of Object.entries(req.headers)) if (v !== undefined) headers.set(k, Array.isArray(v) ? v.join(", ") : v);
+        const init = { method: req.method, headers };
+        if (req.method !== "GET" && req.method !== "HEAD" && body.length) init.body = body;
+        const response = await handler(new Request("http://" + (req.headers.host || "localhost") + req.url, init));
+        const out = Buffer.from(await response.arrayBuffer());
+        const h = {};
+        response.headers.forEach((v, k) => (h[k] = v));
+        res.writeHead(response.status, h);
+        res.end(out);
+      } catch (e) {
+        res.writeHead(500, { "content-type": "text/plain" });
+        res.end("Server error");
+      }
+    })
+    .listen(port, "0.0.0.0", () => console.log("LexaID berjalan di port " + port));
+}
