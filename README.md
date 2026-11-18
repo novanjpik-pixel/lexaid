@@ -1,4 +1,4 @@
-# LexaID – Dashboard Analisis Hukum 5W+1H
+# FGI LAW – Dashboard Analisis Hukum 5W+1H
 
 Frontend (`web/index.html`) + backend kecil WinterJS (`src/server.src.js`) yang memanggil Claude API.
 Kunci API **tidak pernah** ada di browser.
