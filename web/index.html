@@ -56,7 +56,21 @@ button:disabled{opacity:.55}
 .st{display:flex;gap:12px;padding:10px 0}.st i{flex:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--btn);display:grid;place-items:center;font:700 13px system-ui;font-style:normal}.st strong{display:block}.st div{font-size:14px}
 .foot{font-size:12px;color:var(--mut);text-align:center;padding:10px 6px}
 .xp{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.xt{flex:1;min-width:200px}.xt b{display:block;color:var(--acc);font-family:var(--serif);font-size:18px}.xt small{color:var(--mut)}.xb{display:flex;gap:8px;flex:1 1 260px}.xb button{flex:1;padding:12px 14px}.xb button+button{background:transparent;color:var(--ink);border:1px solid var(--gold);box-shadow:none}#xmsg{flex:1 0 100%;margin:0}#xmsg:empty{display:none}
-@media print{.xp,.dock,.hero button,#form,.tabs{display:none}.pn{display:block!important}body{background:#fff;color:#000}.card{break-inside:avoid;background:#fff}}
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(2,1fr);margin-bottom:12px}
+@media(min-width:720px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px 14px}
+.kpi small{display:block;color:var(--mut);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+.kpi b{display:block;font:700 24px var(--serif);color:var(--ink);margin-top:2px;overflow-wrap:anywhere}
+.kpi span{font-size:11.5px;color:var(--mut)}
+.sg{display:flex;height:12px;border-radius:9px;overflow:hidden;background:var(--bd);margin:6px 0}.sg i{display:block;height:100%}
+.lg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut)}.lg em{font-style:normal}.lg em:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:var(--c)}
+.sk{border-left:4px solid var(--gold);padding-left:12px;margin:12px 0}
+.sk h3{margin:0 0 4px;font:700 17px var(--serif);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.kv{display:grid;grid-template-columns:128px 1fr;gap:3px 10px;font-size:13.5px;margin:6px 0}.kv dt{color:var(--mut);font-weight:600}.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media(max-width:520px){.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+.vf{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;border:1px solid var(--warn);color:var(--warn);letter-spacing:.3px;text-transform:uppercase}
+.two{display:grid;gap:12px}@media(min-width:720px){.two{grid-template-columns:1fr 1fr}}
+@media print{.xp,.dock,.hero button,#form,.tabs{display:none}.pn{display:block!important}body{background:#fff;color:#000}.card,.kpi{break-inside:avoid;background:#fff}}
 </style>
 </head>
 <body>
@@ -184,6 +198,23 @@ function prog(){const n=F.filter(f=>$('f_'+f[0]).value.trim().length>8).length,p
 F.forEach(f=>$('f_'+f[0]).addEventListener('input',prog));
 $('code').value=localStorage.getItem('lexa_code')||'';
 function demo(){const d={what:'Budi menerima uang muka Rp150 juta dari Sari untuk pembelian sebidang tanah, lalu tidak menyerahkan sertifikat dan menghilang. Tanah ternyata sudah dijual ke pihak lain.',who:'Sari (pembeli, karyawan swasta); Budi (penjual/perantara); Andi (pembeli kedua).',when:'Perjanjian 10 Maret 2026; transfer 12 Maret 2026; batas serah terima 10 April 2026; Budi tidak dapat dihubungi sejak 11 April 2026.',where:'Kota Bogor, Jawa Barat; transfer lewat bank, perjanjian di rumah Budi.',why:'Sari ingin membeli tanah untuk usaha; Budi diduga butuh dana melunasi utang.',how:'Perjanjian di bawah tangan dengan kuitansi; Budi meyakinkan tanah bebas sengketa dan menunjukkan fotokopi sertifikat; uang ditransfer ke rekening Budi.'};F.forEach(f=>$('f_'+f[0]).value=d[f[0]]);$('pos').selectedIndex=1;$('ev').value='Bukti transfer, kuitansi, chat WhatsApp, fotokopi sertifikat';prog()}
+const AR=x=>Array.isArray(x)?x:[];
+const KP={tinggi:['ya','Tinggi'],sedang:['sb','Sedang'],rendah:['td','Rendah']};
+const kpill=s=>{const k=KP[String(s||'').toLowerCase()]||['td','Rendah'];return`<span class="pill ${k[0]}" title="Tingkat kepastian">Kepastian ${k[1]}</span>`};
+const kc=s=>({tinggi:'ok',sedang:'warn'}[String(s||'').toLowerCase()]||'bad');
+const rp=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
+const T0=x=>String(x??'').trim();
+/* Normalisasi: pastikan blok sanksi selalu ada, dan tandai bila hanya diturunkan dari narasi pasal */
+function norm(r){
+ const sk=r.sanksi&&typeof r.sanksi==='object'?r.sanksi:{};
+ sk.pidana=AR(sk.pidana).filter(x=>x&&typeof x==='object');sk.perdata=AR(sk.perdata).filter(x=>x&&typeof x==='object');sk.administratif=AR(sk.administratif).filter(x=>x&&typeof x==='object');
+ r.turunan=false;
+ if(!sk.pidana.length&&!sk.perdata.length){
+  AR(r.dasar_hukum).forEach(d=>{const t=T0(d.akibat&&d.akibat.sanksi);if(!t)return;const pid=/pidana|penjara|denda|kurung/i.test(t);
+   (pid?sk.pidana:sk.perdata).push(pid?{pasal:d.nama,delik:'',ancaman:t,kepastian:'rendah',verifikasi_pasal:true,catatan:'Diturunkan dari narasi pasal, bukan dari rincian sanksi. Verifikasi sebelum dipakai.'}:{dasar_gugatan:'',dasar_pasal:d.nama,petitum:[],ganti_rugi:{materiil:t},kepastian:'rendah',catatan:'Diturunkan dari narasi pasal. Verifikasi sebelum dipakai.'});r.turunan=true});
+ }
+ r.sanksi=sk;
+ return r}
 async function run(){
  const n=prog(),m=$('msg');m.innerHTML='';
  if(!$('f_what').value.trim()){m.innerHTML='<div class="err">Isi minimal bagian “Apa” terlebih dahulu.</div>';return}
@@ -195,14 +226,30 @@ async function run(){
   if(r.status===401){$('codebox').style.display='block';throw new Error('Kode akses diperlukan atau salah.')}
   if(!r.ok)throw new Error(j.error||('Server error '+r.status));
   localStorage.setItem('lexa_code',$('code').value);
-  const d=JSON.parse(j.text.replace(/^```json|```$/gm,'').trim());
+  const d=norm(JSON.parse(j.text.replace(/^```json|```$/gm,'').trim()));
   LAST={r:d,input:{fields,pos:$('pos').value,ev:$('ev').value},at:new Date()};
   show(d,n);
  }catch(e){m.innerHTML='<div class="err">'+E(e.message||'Analisis gagal, coba lagi.')+'</div>'}
  b.disabled=false;b.textContent='Analisis Hukum';
 }
 const pill=s=>{const m={ya:['ya','Terpenuhi'],sebagian:['sb','Sebagian'],tidak:['td','Tidak'],belum_jelas:['nn','Belum jelas'],ada:['ya','Ada'],kurang:['sb','Kurang'],perlu_dicari:['td','Cari']}[s]||['nn',s||'-'];return`<span class="pill ${m[0]}">${E(m[1])}</span>`};
+const rq=(l,v,s)=>{const c=v>=66?'var(--ok)':v>=33?'var(--warn)':'var(--bad)';return`<div class="rb"><div class="h"><span>${E(l)}</span><span style="color:${c}">${v}%</span></div><div class="t"><i style="width:${Math.max(3,v)}%;background:${c}"></i></div>${s?`<p>${E(s)}</p>`:''}</div>`};
 const rb=(l,v,s)=>`<div class="rb"><div class="h"><span>${E(l)}</span><span style="color:${C(v)}">${v}</span></div><div class="t"><i style="width:${Math.max(3,v)}%;background:linear-gradient(90deg,var(--ok),${C(v)})"></i></div>${s?`<p>${E(s)}</p>`:''}</div>`;
+function sanksiPanel(r){
+ const sk=r.sanksi,pd=sk.pidana,pr=sk.perdata,ad=sk.administratif,vl=[...pd,...pr,...ad].filter(x=>x.verifikasi_pasal===true||String(x.kepastian).toLowerCase()==='rendah');
+ const est=pr.reduce((a,x)=>a+(+(x.ganti_rugi&&x.ganti_rugi.estimasi_rp)||0),0);
+ const all=[...pd,...pr,...ad],cnt={tinggi:0,sedang:0,rendah:0};all.forEach(x=>{const k=String(x.kepastian||'').toLowerCase();cnt[cnt[k]!==undefined?k:'rendah']++});
+ const tot=all.length||1,cl={tinggi:'var(--ok)',sedang:'var(--warn)',rendah:'var(--bad)'};
+ const kvs=a=>`<dl class="kv">${a.filter(x=>T0(x[1])).map(x=>`<dt>${E(x[0])}</dt><dd>${E(x[1])}</dd>`).join('')}</dl>`;
+ const ya={ya:'Ya (perlu laporan korban)',tidak:'Tidak (delik biasa)',belum_jelas:'Belum jelas'};
+ const P=pd.map(x=>`<div class="sk"><h3>${E(x.pasal||x.delik||'Delik')}${kpill(x.kepastian)}${x.verifikasi_pasal===true?'<span class="vf">Verifikasi nomor pasal</span>':''}</h3>${kvs([['Delik',x.pasal&&x.delik?x.delik:''],['Ancaman pidana',x.ancaman],['Pidana tambahan',x.pidana_tambahan],['Alternatif',x.alternatif],['Delik aduan',ya[x.delik_aduan]||x.delik_aduan],['Rezim waktu',x.rezim_waktu],['Catatan',x.catatan]])}</div>`).join('')||'<p class="note">Model tidak merinci sanksi pidana. Bila peristiwa memang bukan perkara pidana, ini wajar; bila ragu, jalankan analisis ulang.</p>';
+ const D=pr.map(x=>{const g=x.ganti_rugi||{};return`<div class="sk"><h3>${E(x.dasar_gugatan||'Gugatan perdata')}${kpill(x.kepastian)}</h3>${kvs([['Dasar pasal',x.dasar_pasal],['Ganti rugi materiil',g.materiil],['Ganti rugi immateriil',g.immateriil],['Bunga / denda',g.bunga],['Estimasi nilai',+g.estimasi_rp>0?rp(g.estimasi_rp)+' (estimasi, bukan putusan)':''],['Dasar hitung',g.dasar_hitung],['Upaya lain',x.upaya_lain],['Forum',x.forum],['Catatan',x.catatan]])}${AR(x.petitum).length?`<b style="font-size:13px">Petitum yang dapat diajukan</b><ul style="margin:4px 0 0;padding-left:18px;font-size:13.5px">${AR(x.petitum).map(t=>`<li>${E(t)}</li>`).join('')}</ul>`:''}</div>`}).join('')||'<p class="note">Model tidak merinci tuntutan perdata. Bila ada hubungan hukum atau kerugian, jalankan analisis ulang.</p>';
+ const A=ad.length?`<div class="card"><h2>Sanksi Administratif</h2>${ad.map(x=>`<div class="sk"><h3>${E(x.sanksi)}${kpill(x.kepastian)}</h3>${kvs([['Dasar',x.dasar]])}</div>`).join('')}</div>`:'';
+ return`<div class="kpis"><div class="kpi"><small>Delik pidana</small><b>${pd.length}</b><span>dasar sanksi pidana</span></div><div class="kpi"><small>Gugatan perdata</small><b>${pr.length}</b><span>dasar tuntutan</span></div><div class="kpi"><small>Estimasi ganti rugi</small><b>${est>0?rp(est):'Tidak ada angka'}</b><span>${est>0?'dari angka pada kronologi':'tidak dihitung tanpa angka'}</span></div><div class="kpi"><small>Perlu verifikasi</small><b style="color:${vl.length?'var(--warn)':'var(--ok)'}">${vl.length}</b><span>sanksi berkepastian rendah</span></div></div>`
+ +(r.turunan?'<p class="note"><b>Perhatian:</b> rincian sanksi tidak dikembalikan model, sehingga ditampilkan dari narasi pasal dengan kepastian rendah. Jalankan analisis ulang atau verifikasi manual.</p>':'')
+ +(sk.ringkasan_eksposur?`<div class="card"><h2>Eksposur Pidana vs Perdata</h2><p style="margin:0 0 6px">${E(sk.ringkasan_eksposur)}</p>${(r.risiko||[]).map(x=>rb(x.rezim,N(x.skor),'')).join('')}</div>`:'')
+ +`<div class="card"><h2>Keandalan Sanksi</h2><div class="sg">${['tinggi','sedang','rendah'].map(k=>`<i style="width:${cnt[k]/tot*100}%;background:${cl[k]}" title="${k}: ${cnt[k]}"></i>`).join('')}</div><div class="lg">${['tinggi','sedang','rendah'].map(k=>`<em style="--c:${cl[k]}">Kepastian ${k}: ${cnt[k]}</em>`).join('')}</div><p style="font-size:12.5px;color:var(--mut);margin:8px 0 0">Kepastian tinggi berarti model yakin pada nomor pasal dan ancamannya. Tetap verifikasi ke teks resmi sebelum dipakai.</p></div>`
+ +`<div class="card"><h2>Sanksi Pidana</h2>${P}</div><div class="card"><h2>Sanksi dan Tuntutan Perdata</h2>${D}</div>${A}`}
 function show(r,n){
  const k=N(r.keyakinan),L=(r.bidang_lain||[]).map(x=>`<span class="chip">${E(x)}</span>`).join('');
  $('hero').innerHTML=`<div class="gauge"><svg width="104" height="104"><circle cx="52" cy="52" r="44" fill="none" stroke="var(--bd)" stroke-width="9"/><circle cx="52" cy="52" r="44" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="${276.5*(1-k/100)}"/></svg><div><span>${k}%<small>keyakinan</small></span></div></div><div style="flex:1;min-width:200px"><span class="chip go">${E(r.bidang_utama)}</span>${L}<h3 style="margin-top:8px">${E(r.kualifikasi)}</h3>${r.rezim_berlaku?`<p class="note" style="margin:10px 0 0"><b>Rezim hukum:</b> ${E(r.rezim_berlaku)}</p>`:''}</div>`;
@@ -211,9 +258,10 @@ function show(r,n){
   ringkasan:`<div class="card"><h2>Fakta Hukum</h2><p style="margin:0">${E(r.ringkasan)}</p></div><div class="card"><h2>Profil Risiko</h2>${(r.risiko||[]).map(x=>rb(x.rezim,N(x.skor),x.alasan)).join('')}</div><div class="card"><h2>Para Pihak</h2>${(r.pihak||[]).map(p=>`<div class="u"><div><b>${E(p.nama)}</b> · ${E(p.peran)}<small>${E(p.potensi)}</small></div></div>`).join('')}</div><div class="card"><h2>Kesimpulan</h2>${String(r.kesimpulan||'').split(/\n+/).map(p=>`<p>${E(p)}</p>`).join('')}</div>`,
   pasal:(r.rantai_kausalitas?`<div class="card"><h2>Rantai Sebab → Akibat</h2><p style="margin:0">${E(r.rantai_kausalitas)}</p></div>`:'')+dh.map(d=>{const sb=d.sebab||d.unsur||[],a=d.akibat||{};return`<div class="card">${rb(d.nama,N(d.relevansi),d.uraian)}<h2 style="margin-top:14px">① Sebab: ketentuan tiap unsur pelanggaran</h2>${sb.map(u=>`<div class="u">${pill(u.status)}<div>${E(u.unsur)}${u.ketentuan?`<small><b>Ketentuan:</b> ${E(u.ketentuan)}</small>`:''}${u.sebab?`<small><b>Sebab (fakta):</b> ${E(u.sebab)}</small>`:''}<small>${E(u.catatan)}</small></div></div>`).join('')}<h2 style="margin-top:14px">② Akibat pelanggaran</h2>${[['Akibat',a.akibat_pelanggaran],['Kerugian',a.kerugian],['Sanksi',a.sanksi],['Kausalitas',a.kausalitas]].filter(x=>x[1]).map(x=>`<p class="note" style="margin:0 0 8px"><b>${x[0]}:</b> ${E(x[1])}</p>`).join('')||'<p class="note">Belum diuraikan.</p>'}</div>`}).join('')||'<div class="card">Tidak ada dasar hukum.</div>',
   bukti:`<div class="card"><h2>Alat Bukti</h2>${(r.bukti||[]).map(b=>`<div class="u">${pill(b.status)}<div>${E(b.alat_bukti)}<small>${E(b.catatan)}</small></div></div>`).join('')}</div><div class="card"><h2>Informasi yang Masih Kurang</h2><ul style="margin:0;padding-left:18px">${(r.informasi_kurang||[]).map(x=>`<li>${E(x)}</li>`).join('')}</ul>${r.daluwarsa?`<p class="note" style="margin:12px 0 0"><b>Waktu &amp; daluwarsa:</b> ${E(r.daluwarsa)}</p>`:''}</div>`,
+  sanksi:sanksiPanel(r),
   langkah:`<div class="card"><h2>Langkah Hukum</h2>${(r.langkah||[]).map((s,i)=>`<div class="st"><i>${i+1}</i><div><strong>${E(s.tahap)}</strong>${E(s.aksi)}</div></div>`).join('')}</div>`
  };
- const T=[['ringkasan','Ringkasan'],['pasal','Pasal & Unsur'],['bukti','Bukti'],['langkah','Langkah']];
+ const T=[['ringkasan','Ringkasan'],['sanksi','Sanksi'],['pasal','Pasal & Unsur'],['bukti','Bukti'],['langkah','Langkah']];
  $('tabs').innerHTML=T.map((t,i)=>`<button class="${i?'':'on'}" data-t="${t[0]}">${t[1]}</button>`).join('');
  $('panels').innerHTML=T.map((t,i)=>`<div class="pn ${i?'':'on'}" id="p_${t[0]}">${P[t[0]]}</div>`).join('');
  $('tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.pn').forEach(p=>p.classList.toggle('on',p.id==='p_'+t))};
@@ -262,11 +310,18 @@ function model(){
  if((r.risiko||[]).length){H('Profil Risiko');r.risiko.forEach(x=>M.push({t:'bar',label:S(x.rezim),v:N(x.skor),desc:S(x.alasan)}))}
  if((r.pihak||[]).length){H('Para Pihak');r.pihak.forEach(p=>M.push({t:'item',tag:null,title:S(p.nama)+(S(p.peran)?' \u2013 '+S(p.peran):''),note:S(p.potensi)}))}
  if((r.dasar_hukum||[]).length){if(S(r.rantai_kausalitas)){H('Rantai Sebab dan Akibat');P(r.rantai_kausalitas)}H('Dasar Hukum: Sebab lalu Akibat');r.dasar_hukum.forEach(d=>{M.push({t:'bar',label:S(d.nama),v:N(d.relevansi),desc:S(d.uraian),rel:1});M.push({t:'note',label:'1. Sebab: ketentuan tiap unsur pelanggaran',text:'Dijawab lebih dulu, per unsur.'});(d.sebab||d.unsur||[]).forEach(u=>{const g=tag(u.status);M.push({t:'item',tag:g[0],tc:g[1],title:S(u.unsur),note:[S(u.ketentuan)&&'Ketentuan: '+S(u.ketentuan),S(u.sebab)&&'Sebab (fakta): '+S(u.sebab),S(u.catatan)].filter(Boolean).join(' | ')})});const ak=d.akibat||{};M.push({t:'note',label:'2. Akibat pelanggaran',text:[['Akibat',ak.akibat_pelanggaran],['Kerugian',ak.kerugian],['Sanksi',ak.sanksi],['Kausalitas',ak.kausalitas]].filter(x=>S(x[1])).map(x=>x[0]+': '+S(x[1])).join(' | ')||'Belum diuraikan.'});M.push({t:'sp'})})}
+ {const sk=r.sanksi,tg=x=>String(x||'').toLowerCase(),TG={tinggi:'TINGGI',sedang:'SEDANG'},pn=x=>(TG[tg(x)]||'RENDAH');
+  H('Sanksi Pidana dan Perdata');P('Tanda pada tiap butir = tingkat kepastian model (TINGGI / SEDANG / RENDAH). Sanksi berkepastian rendah wajib diverifikasi.');
+  if(S(sk.ringkasan_eksposur))M.push({t:'note',label:'Eksposur pidana vs perdata',text:S(sk.ringkasan_eksposur)});
+  if(r.turunan)M.push({t:'note',label:'Perhatian',text:'Rincian sanksi tidak dikembalikan model; ditampilkan dari narasi pasal dengan kepastian rendah.'});
+  sk.pidana.forEach(x=>M.push({t:'item',tag:pn(x.kepastian),tc:kc(x.kepastian),title:'Pidana: '+S(x.pasal||x.delik)+(x.verifikasi_pasal===true?' [VERIFIKASI NOMOR PASAL]':''),note:[['Delik',x.pasal&&x.delik?x.delik:''],['Ancaman',x.ancaman],['Pidana tambahan',x.pidana_tambahan],['Alternatif',x.alternatif],['Delik aduan',x.delik_aduan],['Rezim waktu',x.rezim_waktu],['Catatan',x.catatan]].filter(q=>S(q[1])).map(q=>q[0]+': '+S(q[1])).join(' | ')}));
+  sk.perdata.forEach(x=>{const g=x.ganti_rugi||{};M.push({t:'item',tag:pn(x.kepastian),tc:kc(x.kepastian),title:'Perdata: '+S(x.dasar_gugatan||x.dasar_pasal),note:[['Dasar pasal',x.dasar_pasal],['Materiil',g.materiil],['Immateriil',g.immateriil],['Bunga/denda',g.bunga],['Estimasi',+g.estimasi_rp>0?rp(g.estimasi_rp)+' (estimasi, bukan putusan)':''],['Dasar hitung',g.dasar_hitung],['Petitum',AR(x.petitum).join('; ')],['Upaya lain',x.upaya_lain],['Forum',x.forum],['Catatan',x.catatan]].filter(q=>S(q[1])).map(q=>q[0]+': '+S(q[1])).join(' | ')})});
+  sk.administratif.forEach(x=>M.push({t:'item',tag:pn(x.kepastian),tc:kc(x.kepastian),title:'Administratif: '+S(x.sanksi),note:S(x.dasar)&&'Dasar: '+S(x.dasar)}))}
  if((r.bukti||[]).length){H('Alat Bukti');r.bukti.forEach(b=>{const g=tag(b.status);M.push({t:'item',tag:g[0],tc:g[1],title:S(b.alat_bukti),note:S(b.catatan)})})}
  if((r.informasi_kurang||[]).length){H('Informasi yang Masih Kurang');r.informasi_kurang.forEach(x=>M.push({t:'li',text:S(x)}))}
  if(S(r.daluwarsa))M.push({t:'note',label:'Waktu dan daluwarsa',text:S(r.daluwarsa)});
  if((r.langkah||[]).length){H('Langkah Hukum');r.langkah.forEach((s,i)=>M.push({t:'step',n:i+1,title:S(s.tahap),text:S(s.aksi)}))}
- if(S(r.kesimpulan)){H('Kesimpulan');String(r.kesimpulan).split(/\n+/).forEach(x=>P(x))}
+  if(S(r.kesimpulan)){H('Kesimpulan');String(r.kesimpulan).split(/\n+/).forEach(x=>P(x))}
  M.push({t:'disc',text:'Alat bantu pemahaman awal berbasis AI, bukan nasihat hukum. Acuan hukum per 18 November 2026; verifikasi nomor pasal, tanggal berlaku, dan ketentuan peralihan di JDIH atau sumber resmi, lalu konsultasikan ke advokat berlisensi.'});
  return M}
 
