@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070d1f">
+<title>LexaID – Analisis Hukum 5W+1H</title>
+<style>
+:root{--bg:#070d1f;--bg2:#13204a;--card:rgba(255,255,255,.06);--bd:rgba(255,255,255,.13);--ink:#eef1fa;--mut:#9fb0d4;--gold:#e2b857;--gold2:#f6dc9a;--ok:#35c48b;--warn:#f0b43c;--bad:#ef6b6b;--inp:rgba(255,255,255,.07);--btn:#1a1405}
+@media (prefers-color-scheme:light){:root{--bg:#f4f1e8;--bg2:#dfe6fb;--card:rgba(255,255,255,.75);--bd:rgba(20,30,70,.13);--ink:#141b36;--mut:#56638a;--gold:#a97b17;--gold2:#7a5810;--inp:rgba(255,255,255,.9);--btn:#fff}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(900px 500px at 85% -10%,var(--bg2),transparent),radial-gradient(700px 400px at -10% 30%,color-mix(in srgb,var(--gold) 14%,transparent),transparent),var(--bg);background-attachment:fixed;min-height:100vh;padding:env(safe-area-inset-top) 0 calc(96px + env(safe-area-inset-bottom))}
+.w{max-width:1100px;margin:0 auto;padding:14px}
+.hero{padding:26px 6px 14px;display:flex;gap:14px;align-items:center}
+.logo{flex:none;width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:grid;place-items:center;box-shadow:0 8px 28px color-mix(in srgb,var(--gold) 35%,transparent)}
+.hero h1{margin:0;font:700 clamp(22px,5vw,32px)/1.15 Georgia,"Times New Roman",serif;letter-spacing:.2px}
+.hero h1 span{color:var(--gold)}
+.hero p{margin:4px 0 0;color:var(--mut);font-size:13px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:12px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+h2{font:600 16px Georgia,serif;margin:0 0 10px;color:var(--gold)}
+.g{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:720px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+label{display:flex;gap:6px;align-items:center;font-size:12.5px;font-weight:600;color:var(--mut);margin-bottom:5px}
+label b{color:var(--gold);font-size:15px}
+textarea,input,select{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--inp);color:var(--ink);font:inherit;font-size:16px;outline:0}
+textarea{min-height:78px;resize:vertical}
+textarea:focus,input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 22%,transparent)}
+details summary{cursor:pointer;font-weight:600;color:var(--gold)}
+details ul{margin:8px 0 0;padding-left:18px;color:var(--mut);font-size:13px}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--bd)}
+.dock>div{max-width:1100px;margin:0 auto;display:flex;gap:12px;align-items:center}
+.ring{flex:none;position:relative;width:46px;height:46px}.ring svg{transform:rotate(-90deg)}.ring span{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:700}
+.dock small{color:var(--mut);flex:1;line-height:1.3}
+button{font:700 15px inherit;border:0;border-radius:14px;padding:13px 22px;cursor:pointer;color:var(--btn);background:linear-gradient(135deg,var(--gold),var(--gold2));min-height:46px;box-shadow:0 6px 20px color-mix(in srgb,var(--gold) 30%,transparent)}
+button.s{background:transparent;color:var(--ink);border:1px solid var(--bd);box-shadow:none;padding:9px 14px;min-height:38px;font-size:13px}
+button:disabled{opacity:.55}
+.err{color:var(--bad);font-weight:600;margin:8px 2px}
+#out{display:none}
+.top{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.gauge{position:relative;width:104px;height:104px;flex:none}.gauge svg{transform:rotate(-90deg)}.gauge div{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:700 24px Georgia,serif;line-height:1}.gauge small{display:block;font:11px system-ui;color:var(--mut);margin-top:3px}
+.top h3{margin:0;font:700 20px Georgia,serif}
+.chip{display:inline-block;padding:3px 11px;border-radius:99px;font-size:12px;border:1px solid var(--bd);background:var(--inp);margin:6px 6px 0 0}
+.chip.go{background:var(--gold);color:var(--btn);border-color:transparent;font-weight:700}
+.note{border-left:3px solid var(--gold);padding:8px 12px;border-radius:0 10px 10px 0;background:color-mix(in srgb,var(--gold) 9%,transparent);font-size:13.5px;margin:0 0 12px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;background:var(--inp);color:var(--mut);box-shadow:none;border:1px solid var(--bd);padding:9px 16px;min-height:40px;font-size:13.5px;border-radius:99px}
+.tabs button.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--btn);border-color:transparent}
+.pn{display:none}.pn.on{display:block}
+.rb{margin:12px 0}.rb .h{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600}.rb .t{height:10px;border-radius:9px;background:var(--bd);margin:5px 0;overflow:hidden}.rb .t i{display:block;height:100%;border-radius:9px}.rb p{margin:0;font-size:12.5px;color:var(--mut)}
+.u{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--bd);font-size:13.5px}.u>div{flex:1;min-width:0}.u small{display:block;color:var(--mut)}
+.pill{flex:none;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;color:#fff;text-transform:uppercase;letter-spacing:.3px}
+.ya{background:var(--ok)}.sb{background:var(--warn);color:#2a1d00}.td{background:var(--bad)}.nn{background:#7584a8}
+.st{display:flex;gap:12px;padding:10px 0}.st i{flex:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--btn);display:grid;place-items:center;font:700 13px system-ui;font-style:normal}.st strong{display:block}.st div{font-size:14px}
+.foot{font-size:12px;color:var(--mut);text-align:center;padding:10px 6px}
+@media print{.dock,.hero button,#form,.tabs{display:none}.pn{display:block!important}body{background:#fff;color:#000}.card{break-inside:avoid;background:#fff}}
+</style>
+</head>
+<body>
+<div class="w">
+<div class="hero">
+ <div class="logo"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1a1405" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 21h14M5 7h14M5 7l-3 7a3.5 3.5 0 0 0 6 0L5 7zM19 7l-3 7a3.5 3.5 0 0 0 6 0l-3-7z"/></svg></div>
+ <div><h1>Lexa<span>ID</span></h1><p>Analisis hukum Indonesia dari kronologi 5W+1H: pidana, perdata, ketenagakerjaan, dan lainnya</p></div>
+</div>
+
+<section id="form" class="card">
+ <h2>Kronologi Peristiwa</h2>
+ <details class="note"><summary>Kerangka hukum yang dipakai (per 18 Nov 2026)</summary><ul><li>Pidana: UU 1/2023 (KUHP), UU 20/2025 (KUHAP), UU 1/2026 (Penyesuaian Pidana), berlaku sejak 2 Jan 2026</li><li>Perdata: KUH Perdata, HIR/RBg, perlindungan konsumen, pertanahan, hukum keluarga</li><li>Ketenagakerjaan: UU Pelindungan Ketenagakerjaan (disahkan DPR Okt 2026)</li><li>Digital: UU ITE jo. UU 1/2024, UU PDP 27/2022; juga TUN, Tipikor, TPKS, PKDRT, anak, narkotika</li></ul></details>
+ <div class="g g2" id="fields"></div>
+ <div class="g g2" style="margin-top:12px">
+  <div><label>Posisi Anda</label><select id="pos"><option>Netral / analisis umum</option><option>Korban / Penggugat / Pelapor</option><option>Terlapor / Tergugat / Terdakwa</option><option>Pihak ketiga / Saksi</option></select></div>
+  <div><label>Bukti yang ada (opsional)</label><input id="ev" placeholder="kuitansi, chat, CCTV, saksi"></div>
+ </div>
+ <div id="codebox" style="display:none;margin-top:12px"><label>Kode akses</label><input id="code" type="password" autocomplete="off" placeholder="Masukkan kode akses"></div>
+ <div class="row" style="margin-top:12px"><button class="s" onclick="demo()">Muat contoh kasus</button></div>
+ <div id="msg"></div>
+</section>
+
+<div id="out">
+ <section class="card top" id="hero"></section>
+ <div class="tabs" id="tabs"></div>
+ <div id="panels"></div>
+ <p class="foot">Alat bantu pemahaman awal berbasis AI, bukan nasihat hukum. Acuan hukum per 18 November 2026; verifikasi nomor pasal, tanggal berlaku, dan ketentuan peralihan di JDIH atau sumber resmi, lalu konsultasikan ke advokat berlisensi.<br><button class="s" style="margin-top:10px" onclick="print()">Cetak / simpan PDF</button></p>
+</div>
+</div>
+
+<div class="dock"><div>
+ <div class="ring"><svg width="46" height="46"><circle cx="23" cy="23" r="19" fill="none" stroke="var(--bd)" stroke-width="5"/><circle id="rc" cx="23" cy="23" r="19" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="119.4"/></svg><span id="rv">0%</span></div>
+ <small>Kelengkapan 5W+1H<br>makin lengkap, makin tajam</small>
+ <button id="go" onclick="run()">Analisis Hukum</button>
+</div></div>
+
+<script>
+const F=[['what','Apa','Peristiwa atau perbuatan yang terjadi','⚡'],['who','Siapa','Para pihak, peran, hubungan','👤'],['when','Kapan','Tanggal atau rentang waktu (penting untuk rezim hukum)','🗓'],['where','Di mana','Lokasi kejadian','📍'],['why','Mengapa','Motif dan latar belakang','💡'],['how','Bagaimana','Cara, modus, urutan kejadian','🧩']];
+const $=id=>document.getElementById(id);
+const E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const N=x=>Math.max(0,Math.min(100,Math.round(+x||0)));
+const C=v=>v>=66?'var(--bad)':v>=33?'var(--warn)':'var(--ok)';
+$('fields').innerHTML=F.map(f=>`<div><label><b>${f[3]}</b>${f[1]} (${f[0]})</label><textarea id="f_${f[0]}" placeholder="${f[2]}"></textarea></div>`).join('');
+function prog(){const n=F.filter(f=>$('f_'+f[0]).value.trim().length>8).length,p=Math.round(n/6*100);$('rc').style.strokeDashoffset=119.4*(1-p/100);$('rv').textContent=p+'%';return n}
+F.forEach(f=>$('f_'+f[0]).addEventListener('input',prog));
+$('code').value=localStorage.getItem('lexa_code')||'';
+function demo(){const d={what:'Budi menerima uang muka Rp150 juta dari Sari untuk pembelian sebidang tanah, lalu tidak menyerahkan sertifikat dan menghilang. Tanah ternyata sudah dijual ke pihak lain.',who:'Sari (pembeli, karyawan swasta); Budi (penjual/perantara); Andi (pembeli kedua).',when:'Perjanjian 10 Maret 2026; transfer 12 Maret 2026; batas serah terima 10 April 2026; Budi tidak dapat dihubungi sejak 11 April 2026.',where:'Kota Bogor, Jawa Barat; transfer lewat bank, perjanjian di rumah Budi.',why:'Sari ingin membeli tanah untuk usaha; Budi diduga butuh dana melunasi utang.',how:'Perjanjian di bawah tangan dengan kuitansi; Budi meyakinkan tanah bebas sengketa dan menunjukkan fotokopi sertifikat; uang ditransfer ke rekening Budi.'};F.forEach(f=>$('f_'+f[0]).value=d[f[0]]);$('pos').selectedIndex=1;$('ev').value='Bukti transfer, kuitansi, chat WhatsApp, fotokopi sertifikat';prog()}
+async function run(){
+ const n=prog(),m=$('msg');m.innerHTML='';
+ if(!$('f_what').value.trim()){m.innerHTML='<div class="err">Isi minimal bagian “Apa” terlebih dahulu.</div>';return}
+ const b=$('go');b.disabled=true;b.textContent='Menganalisis…';
+ try{
+  const fields={};F.forEach(f=>fields[f[0]]=$('f_'+f[0]).value.trim());
+  const r=await fetch('/api/analyze',{method:'POST',headers:{'content-type':'application/json','x-access-code':$('code').value},body:JSON.stringify({fields,pos:$('pos').value,ev:$('ev').value})});
+  const j=await r.json().catch(()=>({}));
+  if(r.status===401){$('codebox').style.display='block';throw new Error('Kode akses diperlukan atau salah.')}
+  if(!r.ok)throw new Error(j.error||('Server error '+r.status));
+  localStorage.setItem('lexa_code',$('code').value);
+  const d=JSON.parse(j.text.replace(/^```json|```$/gm,'').trim());
+  show(d,n);
+ }catch(e){m.innerHTML='<div class="err">'+E(e.message||'Analisis gagal, coba lagi.')+'</div>'}
+ b.disabled=false;b.textContent='Analisis Hukum';
+}
+const pill=s=>{const m={ya:['ya','Terpenuhi'],sebagian:['sb','Sebagian'],tidak:['td','Tidak'],belum_jelas:['nn','Belum jelas'],ada:['ya','Ada'],kurang:['sb','Kurang'],perlu_dicari:['td','Cari']}[s]||['nn',s||'-'];return`<span class="pill ${m[0]}">${E(m[1])}</span>`};
+const rb=(l,v,s)=>`<div class="rb"><div class="h"><span>${E(l)}</span><span style="color:${C(v)}">${v}</span></div><div class="t"><i style="width:${Math.max(3,v)}%;background:linear-gradient(90deg,var(--ok),${C(v)})"></i></div>${s?`<p>${E(s)}</p>`:''}</div>`;
+function show(r,n){
+ const k=N(r.keyakinan),L=(r.bidang_lain||[]).map(x=>`<span class="chip">${E(x)}</span>`).join('');
+ $('hero').innerHTML=`<div class="gauge"><svg width="104" height="104"><circle cx="52" cy="52" r="44" fill="none" stroke="var(--bd)" stroke-width="9"/><circle cx="52" cy="52" r="44" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="${276.5*(1-k/100)}"/></svg><div><span>${k}%<small>keyakinan</small></span></div></div><div style="flex:1;min-width:200px"><span class="chip go">${E(r.bidang_utama)}</span>${L}<h3 style="margin-top:8px">${E(r.kualifikasi)}</h3>${r.rezim_berlaku?`<p class="note" style="margin:10px 0 0"><b>Rezim hukum:</b> ${E(r.rezim_berlaku)}</p>`:''}</div>`;
+ const dh=r.dasar_hukum||[];
+ const P={
+  ringkasan:`<div class="card"><h2>Fakta Hukum</h2><p style="margin:0">${E(r.ringkasan)}</p></div><div class="card"><h2>Profil Risiko</h2>${(r.risiko||[]).map(x=>rb(x.rezim,N(x.skor),x.alasan)).join('')}</div><div class="card"><h2>Para Pihak</h2>${(r.pihak||[]).map(p=>`<div class="u"><div><b>${E(p.nama)}</b> · ${E(p.peran)}<small>${E(p.potensi)}</small></div></div>`).join('')}</div><div class="card"><h2>Kesimpulan</h2>${String(r.kesimpulan||'').split(/\n+/).map(p=>`<p>${E(p)}</p>`).join('')}</div>`,
+  pasal:dh.map(d=>`<div class="card">${rb(d.nama,N(d.relevansi),d.uraian)}${(d.unsur||[]).map(u=>`<div class="u">${pill(u.status)}<div>${E(u.unsur)}<small>${E(u.catatan)}</small></div></div>`).join('')}</div>`).join('')||'<div class="card">Tidak ada dasar hukum.</div>',
+  bukti:`<div class="card"><h2>Alat Bukti</h2>${(r.bukti||[]).map(b=>`<div class="u">${pill(b.status)}<div>${E(b.alat_bukti)}<small>${E(b.catatan)}</small></div></div>`).join('')}</div><div class="card"><h2>Informasi yang Masih Kurang</h2><ul style="margin:0;padding-left:18px">${(r.informasi_kurang||[]).map(x=>`<li>${E(x)}</li>`).join('')}</ul>${r.daluwarsa?`<p class="note" style="margin:12px 0 0"><b>Waktu &amp; daluwarsa:</b> ${E(r.daluwarsa)}</p>`:''}</div>`,
+  langkah:`<div class="card"><h2>Langkah Hukum</h2>${(r.langkah||[]).map((s,i)=>`<div class="st"><i>${i+1}</i><div><strong>${E(s.tahap)}</strong>${E(s.aksi)}</div></div>`).join('')}</div>`
+ };
+ const T=[['ringkasan','Ringkasan'],['pasal','Pasal & Unsur'],['bukti','Bukti'],['langkah','Langkah']];
+ $('tabs').innerHTML=T.map((t,i)=>`<button class="${i?'':'on'}" data-t="${t[0]}">${t[1]}</button>`).join('');
+ $('panels').innerHTML=T.map((t,i)=>`<div class="pn ${i?'':'on'}" id="p_${t[0]}">${P[t[0]]}</div>`).join('');
+ $('tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.pn').forEach(p=>p.classList.toggle('on',p.id==='p_'+t))};
+ $('out').style.display='block';$('hero').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
