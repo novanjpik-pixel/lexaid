@@ -14,11 +14,12 @@ const json = (obj, status = 200) =>
 
 async function analyze(request) {
   const env = (typeof process !== "undefined" && process.env) || {};
+  const useGemini = !!env.GEMINI_API_KEY;
+  const useOllama = !useGemini && !!(env.OLLAMA_BASE_URL || env.OLLAMA_API_KEY || env.OLLAMA_MODEL);
+  if (!useGemini && !useOllama && !env.ANTHROPIC_API_KEY)
+    return json({ error: "Belum ada penyedia AI. Atur GEMINI_API_KEY (atau OLLAMA_API_KEY / ANTHROPIC_API_KEY) di Environment Variables." }, 500);
   if (env.ACCESS_CODE && request.headers.get("x-access-code") !== env.ACCESS_CODE)
     return json({ error: "Kode akses salah." }, 401);
-  const useOllama = !!(env.OLLAMA_BASE_URL || env.OLLAMA_API_KEY || env.OLLAMA_MODEL);
-  if (!useOllama && !env.ANTHROPIC_API_KEY)
-    return json({ error: "Belum ada penyedia AI. Atur OLLAMA_API_KEY (atau ANTHROPIC_API_KEY) di secret server." }, 500);
 
   let body;
   try { body = await request.json(); } catch (e) { return json({ error: "Permintaan tidak valid." }, 400); }
@@ -37,7 +38,34 @@ ${kasus}`;
 
   try {
     let text = "";
-    if (useOllama) {
+    if (useGemini) {
+      const model = (env.GEMINI_MODEL || "gemini-3.5-flash").replace(/^models\//, "");
+      const r = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.2, maxOutputTokens: 8192, responseMimeType: "application/json" },
+          }),
+        }
+      );
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        const m = (d && d.error && d.error.message) || "";
+        if (r.status === 429) return json({ error: "Gemini: kuota gratis habis atau terlalu sering dipakai. Tunggu beberapa menit lalu coba lagi. " + m.slice(0, 160) }, 502);
+        if (r.status === 404) return json({ error: "Gemini: model '" + model + "' tidak ditemukan. Ubah GEMINI_MODEL. " + m.slice(0, 160) }, 502);
+        return json({ error: "Gemini (" + r.status + "): " + (m || "gagal memanggil model.").slice(0, 300) }, 502);
+      }
+      const cand = (d.candidates || [])[0] || {};
+      text = ((cand.content && cand.content.parts) || []).filter((p) => p.text && !p.thought).map((p) => p.text).join("");
+      if (!text) {
+        const why = (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || "";
+        return json({ error: "Gemini mengembalikan jawaban kosong" + (why ? " (" + why + ")" : "") + ". Coba lagi." }, 502);
+      }
+      if (cand.finishReason === "MAX_TOKENS") return json({ error: "Jawaban Gemini terpotong (terlalu panjang). Persingkat kronologi lalu coba lagi." }, 502);
+    } else if (useOllama) {
       const base = (env.OLLAMA_BASE_URL || "https://ollama.com").replace(/\/+$/, "");
       const headers = { "content-type": "application/json" };
       if (env.OLLAMA_API_KEY) headers.authorization = "Bearer " + env.OLLAMA_API_KEY;
@@ -83,32 +111,34 @@ async function handler(request) {
 }
 
 if (typeof addEventListener === "function") {
-  // Mode WinterJS (Service Worker)
+  // WinterJS / Service Worker
   addEventListener("fetch", (event) => event.respondWith(handler(event.request)));
 } else {
-  // Mode Node.js (preset node-base di Wasmer, atau dijalankan lokal)
-  const http = require("node:http");
-  const port = Number(process.env.PORT) || 8080;
-  http
-    .createServer(async (req, res) => {
-      try {
-        const chunks = [];
-        for await (const c of req) chunks.push(c);
-        const body = Buffer.concat(chunks);
-        const headers = new Headers();
-        for (const [k, v] of Object.entries(req.headers)) if (v !== undefined) headers.set(k, Array.isArray(v) ? v.join(", ") : v);
-        const init = { method: req.method, headers };
-        if (req.method !== "GET" && req.method !== "HEAD" && body.length) init.body = body;
-        const response = await handler(new Request("http://" + (req.headers.host || "localhost") + req.url, init));
-        const out = Buffer.from(await response.arrayBuffer());
-        const h = {};
-        response.headers.forEach((v, k) => (h[k] = v));
-        res.writeHead(response.status, h);
-        res.end(out);
-      } catch (e) {
-        res.writeHead(500, { "content-type": "text/plain" });
-        res.end("Server error");
-      }
-    })
-    .listen(port, "0.0.0.0", () => console.log("LexaID berjalan di port " + port));
+  // Node.js (preset node-base di Wasmer)
+  (async () => {
+    const http = await import("node:http");
+    const port = Number(process.env.PORT) || 8080;
+    http
+      .createServer(async (req, res) => {
+        try {
+          const chunks = [];
+          for await (const c of req) chunks.push(c);
+          const hasBody = req.method !== "GET" && req.method !== "HEAD";
+          const request = new Request("http://" + (req.headers.host || "localhost") + req.url, {
+            method: req.method,
+            headers: req.headers,
+            body: hasBody ? Buffer.concat(chunks) : undefined,
+          });
+          const response = await handler(request);
+          const headers = {};
+          response.headers.forEach((v, k) => (headers[k] = v));
+          res.writeHead(response.status, headers);
+          res.end(Buffer.from(await response.arrayBuffer()));
+        } catch (e) {
+          res.writeHead(500, { "content-type": "text/plain; charset=utf-8" });
+          res.end("Server error");
+        }
+      })
+      .listen(port, "0.0.0.0", () => console.log("LexaID berjalan di port " + port));
+  })();
 }
