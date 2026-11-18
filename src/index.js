@@ -14,10 +14,12 @@ const json = (obj, status = 200) =>
 
 async function analyze(request) {
   const env = (typeof process !== "undefined" && process.env) || {};
-  const useGemini = !!env.GEMINI_API_KEY;
+  const geminiKeys = [env.GEMINI_API_KEY, env.GEMINI_API_KEY_2, env.GEMINI_API_KEY_3, env.GEMINI_API_KEY_4, env.GEMINI_API_KEY_5]
+    .filter(Boolean).join(",").split(/[\s,;]+/).filter((k, i, a) => k && a.indexOf(k) === i);
+  const useGemini = geminiKeys.length > 0;
   const useOllama = !useGemini && !!(env.OLLAMA_BASE_URL || env.OLLAMA_API_KEY || env.OLLAMA_MODEL);
   if (!useGemini && !useOllama && !env.ANTHROPIC_API_KEY)
-    return json({ error: "Belum ada penyedia AI. Atur GEMINI_API_KEY (atau OLLAMA_API_KEY / ANTHROPIC_API_KEY) di Environment Variables." }, 500);
+    return json({ error: "Belum ada penyedia AI. Atur GEMINI_API_KEY (boleh beberapa, pisahkan koma, atau GEMINI_API_KEY_2 dst; atau OLLAMA_API_KEY / ANTHROPIC_API_KEY) di Environment Variables." }, 500);
   if (env.ACCESS_CODE && request.headers.get("x-access-code") !== env.ACCESS_CODE)
     return json({ error: "Kode akses salah." }, 401);
 
@@ -44,38 +46,49 @@ ${kasus}`;
       const MAXT = Math.min(65000, Math.max(8192, parseInt(env.GEMINI_MAX_TOKENS, 10) || 32768));
       let opt = { think: (env.GEMINI_THINKING || "low").toLowerCase(), compact: false };
       const COMPACT = "\n\nPENTING: jawaban sebelumnya terpotong. Ringkas isian: maksimal 4 dasar_hukum, tiap maksimal 4 unsur sebab dan satu objek akibat, catatan/uraian/alasan satu kalimat pendek, bukti dan langkah maksimal 6 butir. Kesimpulan tetap mendalam tetapi maksimal 3 paragraf. Pastikan JSON lengkap dan valid.";
-      const callGemini = (model) =>
+      const callGemini = (model, key) =>
         fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent", {
           method: "POST",
-          headers: { "content-type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
+          headers: { "content-type": "application/json", "x-goog-api-key": key },
           body: JSON.stringify({
             contents: [{ role: "user", parts: [{ text: prompt + (opt.compact ? COMPACT : "") }] }],
             generationConfig: Object.assign({ temperature: 0.2, maxOutputTokens: MAXT, responseMimeType: "application/json" }, opt.think && opt.think !== "off" ? { thinkingConfig: { thinkingLevel: opt.think } } : {}),
           }),
         });
+      // Beberapa API key: mulai dari kunci acak agar beban merata; bila kena batas (429), pindah ke kunci berikutnya.
+      let start = Math.floor(Math.random() * geminiKeys.length);
+      const callAny = async (model) => {
+        let res;
+        for (let n = 0; n < geminiKeys.length; n++) {
+          const idx = (start + n) % geminiKeys.length;
+          res = await callGemini(model, geminiKeys[idx]);
+          if (res.status !== 429) { start = idx; return res; }
+        }
+        return res;
+      };
       const sleep = (ms) => new Promise((ok) => setTimeout(ok, ms));
       let model = primary;
-      let r = await callGemini(model);
+      let r = await callAny(model);
       // Server Google sibuk (503) atau kena batas (429): coba ulang, lalu model cadangan.
       for (let i = 0; i < 2 && (r.status === 503 || r.status === 429); i++) {
         await sleep(2500 * (i + 1));
-        r = await callGemini(model);
+        r = await callAny(model);
       }
       if ((r.status === 503 || r.status === 429) && fallback && fallback !== primary) {
         model = fallback;
-        r = await callGemini(model);
-        if (r.status === 503 || r.status === 429) { await sleep(2500); r = await callGemini(model); }
+        r = await callAny(model);
+        if (r.status === 503 || r.status === 429) { await sleep(2500); r = await callAny(model); }
       }
       let d = await r.json().catch(() => ({}));
       // Bila model tidak mengenal pengaturan thinking, ulangi tanpa pengaturan itu.
       if (r.status === 400 && opt.think && /think/i.test((d.error && d.error.message) || "")) {
         opt.think = "";
-        r = await callGemini(model);
+        r = await callAny(model);
         d = await r.json().catch(() => ({}));
       }
       if (!r.ok) {
         const m = (d && d.error && d.error.message) || "";
-        if (r.status === 429) return json({ error: "Gemini: kuota gratis habis atau terlalu sering dipakai. Tunggu beberapa menit lalu coba lagi. " + m.slice(0, 160) }, 502);
+        if (r.status === 429) return json({ error: "Gemini: kuota gratis habis atau terlalu sering dipakai" + (geminiKeys.length > 1 ? " pada semua " + geminiKeys.length + " API key" : "") + ". Tunggu beberapa menit lalu coba lagi. " + m.slice(0, 160) }, 502);
         if (r.status === 503) return json({ error: "Gemini sedang sibuk (model " + model + "). Sudah dicoba ulang otomatis. Coba lagi beberapa menit lagi, atau isi GEMINI_FALLBACK_MODEL dengan model lain." }, 502);
         if (r.status === 404) return json({ error: "Gemini: model '" + model + "' tidak ditemukan. Ubah GEMINI_MODEL. " + m.slice(0, 160) }, 502);
         return json({ error: "Gemini (" + r.status + "): " + (m || "gagal memanggil model.").slice(0, 300) }, 502);
@@ -84,7 +97,7 @@ ${kasus}`;
       // Terpotong karena batas token: ulangi sekali dengan isian lebih ringkas dan thinking rendah.
       if (cand.finishReason === "MAX_TOKENS") {
         opt = { think: opt.think ? "low" : "", compact: true };
-        r = await callGemini(model);
+        r = await callAny(model);
         d = await r.json().catch(() => ({}));
         if (!r.ok) return json({ error: "Gemini (" + r.status + "): " + (((d && d.error && d.error.message) || "gagal memanggil model.")).slice(0, 300) }, 502);
         cand = (d.candidates || [])[0] || {};
