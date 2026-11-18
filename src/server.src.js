@@ -7,7 +7,7 @@ const LAW = `KERANGKA HUKUM POSITIF INDONESIA (per 18 November 2026). Jadikan ac
 4) DIGITAL/DATA: UU ITE (UU 11/2008 jo. UU 19/2016 jo. UU 1/2024) untuk bagian yang tidak dipindah ke KUHP, UU PDP 27/2022, alat bukti elektronik.
 5) LAIN: UU Peradilan TUN dan UU 30/2014 (Administrasi Pemerintahan); UU Tipikor 31/1999 jo. 20/2001; UU TPKS 12/2022; UU PKDRT 23/2004; UU Perlindungan Anak dan UU SPPA 11/2012; UU Narkotika 35/2009; UU Lalu Lintas 22/2009.`;
 
-const SCHEMA = `{"bidang_utama":"Pidana|Perdata|Tata Usaha Negara|Ketenagakerjaan|Keluarga|Bisnis/Korporasi|Lainnya","bidang_lain":["..."],"ringkasan":"3-5 kalimat fakta hukum","kualifikasi":"mis. dugaan penipuan / wanprestasi","rezim_berlaku":"rezim hukum materiil dan acara yang berlaku berdasarkan tanggal peristiwa, beserta alasannya","keyakinan":0,"risiko":[{"rezim":"Pidana","skor":0,"alasan":"..."},{"rezim":"Perdata","skor":0,"alasan":"..."},{"rezim":"Administratif","skor":0,"alasan":"..."}],"dasar_hukum":[{"nama":"pasal/UU lengkap","relevansi":0,"uraian":"...","sebab":[{"unsur":"unsur pelanggaran","ketentuan":"ketentuan/syarat unsur menurut pasal","sebab":"fakta atau perbuatan yang menjadi sebab terpenuhinya unsur","status":"ya|sebagian|tidak|belum_jelas","catatan":"..."}],"akibat":{"akibat_pelanggaran":"akibat nyata/potensial","kerugian":"...","sanksi":"ancaman pidana/ganti rugi/sanksi administratif","kausalitas":"kekuatan hubungan sebab-akibat, penguat dan pelemah"}}],"pihak":[{"nama":"...","peran":"...","potensi":"..."}],"bukti":[{"alat_bukti":"...","status":"ada|kurang|perlu_dicari","catatan":"..."}],"rantai_kausalitas":"1 paragraf: dari sebab ke akibat","informasi_kurang":["..."],"langkah":[{"tahap":"...","aksi":"..."}],"daluwarsa":"catatan batas waktu/daluwarsa","kesimpulan":"paragraf analisis mendalam, seimbang, sebut argumen penguat dan pelemah"}`;
+const SCHEMA = `{"bidang_utama":"Pidana|Perdata|Tata Usaha Negara|Ketenagakerjaan|Keluarga|Bisnis/Korporasi|Lainnya","bidang_lain":["..."],"ringkasan":"3-5 kalimat fakta hukum","kualifikasi":"mis. dugaan penipuan / wanprestasi","rezim_berlaku":"rezim hukum materiil dan acara yang berlaku berdasarkan tanggal peristiwa, beserta alasannya","keyakinan":0,"risiko":[{"rezim":"Pidana","skor":0,"alasan":"..."},{"rezim":"Perdata","skor":0,"alasan":"..."},{"rezim":"Administratif","skor":0,"alasan":"..."}],"dasar_hukum":[{"nama":"pasal/UU lengkap","relevansi":0,"uraian":"...","sebab":[{"unsur":"unsur pelanggaran","ketentuan":"ketentuan/syarat unsur menurut pasal","sebab":"fakta atau perbuatan yang menjadi sebab terpenuhinya unsur","status":"ya|sebagian|tidak|belum_jelas","catatan":"..."}],"akibat":{"akibat_pelanggaran":"akibat nyata/potensial","kerugian":"...","sanksi":"ancaman pidana/ganti rugi/sanksi administratif","kausalitas":"kekuatan hubungan sebab-akibat, penguat dan pelemah"}}],"pihak":[{"nama":"...","peran":"...","potensi":"..."}],"bukti":[{"alat_bukti":"...","status":"ada|kurang|perlu_dicari","catatan":"..."}],"sanksi":{"pidana":[{"pasal":"nomor pasal + nama UU, atau nama delik bila nomor tidak pasti","delik":"nama delik","ancaman":"jenis dan batas pidana pokok (penjara maksimal ... / denda kategori ... = Rp ...)","pidana_tambahan":"mis. pencabutan hak, ganti rugi, perampasan; kosongkan bila tidak ada","alternatif":"pidana pengawasan/kerja sosial/restorative justice bila relevan","delik_aduan":"ya|tidak|belum_jelas","rezim_waktu":"KUHP baru atau lama, dan alasan berdasar tanggal peristiwa","kepastian":"tinggi|sedang|rendah","verifikasi_pasal":true,"catatan":"..."}],"perdata":[{"dasar_gugatan":"wanprestasi|PMH|lainnya","dasar_pasal":"pasal KUH Perdata/UU terkait","petitum":["tuntutan yang dapat diajukan"],"ganti_rugi":{"materiil":"komponen kerugian nyata","immateriil":"bila ada dasar","bunga":"bunga moneter/denda sesuai perjanjian atau undang-undang","estimasi_rp":0,"dasar_hitung":"cara menghitung dari angka yang tertulis pada fakta; estimasi_rp 0 bila angka tidak ada"},"upaya_lain":"sita jaminan, pembatalan perjanjian, somasi, mediasi, dll","forum":"pengadilan/lembaga yang berwenang","kepastian":"tinggi|sedang|rendah","catatan":"..."}],"administratif":[{"sanksi":"...","dasar":"...","kepastian":"tinggi|sedang|rendah"}],"ringkasan_eksposur":"2-3 kalimat: perbandingan eksposur pidana vs perdata bagi posisi pengguna"},"rantai_kausalitas":"1 paragraf: dari sebab ke akibat","informasi_kurang":["..."],"langkah":[{"tahap":"...","aksi":"..."}],"daluwarsa":"catatan batas waktu/daluwarsa","kesimpulan":"paragraf analisis mendalam, seimbang, sebut argumen penguat dan pelemah"}`;
 
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json; charset=utf-8" } });
@@ -32,12 +32,13 @@ async function analyze(request) {
 
   const prompt = `Anda analis hukum Indonesia senior. Analisis peristiwa berikut secara mendalam dan objektif berdasarkan hukum positif Indonesia terbaru.
 ${LAW}
-Untuk SETIAP pasal kerjakan berurutan: (1) SEBAB lebih dulu: jawab ketentuan setiap unsur pelanggaran dan fakta yang menjadi sebab terpenuhinya unsur itu; (2) BARU SETELAH ITU AKIBAT pelanggaran (akibat, kerugian, sanksi, kausalitas). Pada JSON isi "sebab" sebelum "akibat". Petakan unsur setiap pasal ke fakta, nilai kelengkapan 5W+1H, bedakan fakta dan asumsi, jangan mengarang nomor pasal; bila ragu tulis tingkat kepastian rendah. Skor 0-100. Kedalaman ada pada ketepatan pemetaan unsur dan kesimpulan, bukan pada panjang tiap isian: batasi maksimal 5 dasar_hukum (urut paling relevan), tiap dasar_hukum maksimal 5 unsur sebab dan satu objek akibat, setiap catatan/uraian/alasan 1-2 kalimat padat, bukti dan langkah masing-masing maksimal 8 butir, kesimpulan 3-4 paragraf. Jawab HANYA JSON valid sesuai skema, bahasa Indonesia, tanpa markdown.
+Untuk SETIAP pasal kerjakan berurutan: (1) SEBAB lebih dulu: jawab ketentuan setiap unsur pelanggaran dan fakta yang menjadi sebab terpenuhinya unsur itu; (2) BARU SETELAH ITU AKIBAT pelanggaran (akibat, kerugian, sanksi, kausalitas). Pada JSON isi "sebab" sebelum "akibat". Petakan unsur setiap pasal ke fakta, nilai kelengkapan 5W+1H, bedakan fakta dan asumsi, jangan mengarang nomor pasal; bila ragu tulis tingkat kepastian rendah. Wajib isi objek "sanksi" secara rinci, bukan hanya narasi: (a) sanksi.pidana per delik yang relevan dengan ancaman pokok (jenis, batas maksimal, denda berkategori bila ada), pidana tambahan, alternatif, status delik aduan, dan rezim KUHP yang berlaku menurut tanggal peristiwa; (b) sanksi.perdata per gugatan yang mungkin: dasar gugatan, dasar pasal, petitum, ganti rugi materiil/immateriil/bunga, estimasi_rp hanya dari angka yang tertulis pada fakta (jangan mengarang angka; isi 0 bila tidak ada), upaya lain, dan forum; (c) sanksi.administratif bila ada. Beri "kepastian" tinggi hanya bila nomor pasal dan ancamannya Anda yakini; bila ragu, kepastian rendah dan verifikasi_pasal true. Jangan menyebut ancaman pidana yang tidak Anda yakini; tulis "perlu verifikasi" pada ancaman itu. Maksimal 4 sanksi.pidana, 3 sanksi.perdata. Skor 0-100. Kedalaman ada pada ketepatan pemetaan unsur dan kesimpulan, bukan pada panjang tiap isian: batasi maksimal 5 dasar_hukum (urut paling relevan), tiap dasar_hukum maksimal 5 unsur sebab dan satu objek akibat, setiap catatan/uraian/alasan 1-2 kalimat padat, bukti dan langkah masing-masing maksimal 8 butir, kesimpulan 3-4 paragraf. Jawab HANYA JSON valid sesuai skema, bahasa Indonesia, tanpa markdown.
 SKEMA: ${SCHEMA}
 
 PERISTIWA:
 ${kasus}`;
 
+  const meta = { kerangka: "2026-11-18", at: new Date().toISOString() };
   try {
     let text = "";
     if (useGemini) {
@@ -45,7 +46,7 @@ ${kasus}`;
       const fallback = (env.GEMINI_FALLBACK_MODEL || "").replace(/^models\//, "");
       const MAXT = Math.min(65000, Math.max(8192, parseInt(env.GEMINI_MAX_TOKENS, 10) || 32768));
       let opt = { think: (env.GEMINI_THINKING || "low").toLowerCase(), compact: false };
-      const COMPACT = "\n\nPENTING: jawaban sebelumnya terpotong. Ringkas isian: maksimal 4 dasar_hukum, tiap maksimal 4 unsur sebab dan satu objek akibat, catatan/uraian/alasan satu kalimat pendek, bukti dan langkah maksimal 6 butir. Kesimpulan tetap mendalam tetapi maksimal 3 paragraf. Pastikan JSON lengkap dan valid.";
+      const COMPACT = "\n\nPENTING: jawaban sebelumnya terpotong. Ringkas isian: maksimal 4 dasar_hukum, tiap maksimal 3 unsur sebab dan satu objek akibat, sanksi.pidana maksimal 3 dan sanksi.perdata maksimal 2 (objek sanksi TIDAK boleh dihilangkan), catatan/uraian/alasan satu kalimat pendek, bukti dan langkah maksimal 6 butir. Kesimpulan tetap mendalam tetapi maksimal 3 paragraf. Pastikan JSON lengkap dan valid.";
       const callGemini = (model, key) =>
         fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent", {
           method: "POST",
@@ -102,6 +103,7 @@ ${kasus}`;
         if (!r.ok) return json({ error: "Gemini (" + r.status + "): " + (((d && d.error && d.error.message) || "gagal memanggil model.")).slice(0, 300) }, 502);
         cand = (d.candidates || [])[0] || {};
       }
+      meta.provider = "Gemini"; meta.model = model;
       text = ((cand.content && cand.content.parts) || []).filter((p) => p.text && !p.thought).map((p) => p.text).join("");
       if (!text) {
         const why = (d.promptFeedback && d.promptFeedback.blockReason) || cand.finishReason || "";
@@ -120,11 +122,12 @@ ${kasus}`;
           messages: [{ role: "user", content: prompt }],
           stream: false,
           format: "json",
-          options: { num_ctx: 12288, num_predict: 7000, temperature: 0.2 },
+          options: { num_ctx: 16384, num_predict: 9000, temperature: 0.2 },
         }),
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) return json({ error: "Ollama: " + ((d && d.error) || r.status) }, 502);
+      meta.provider = "Ollama"; meta.model = env.OLLAMA_MODEL || "gpt-oss:120b";
       text = (d.message && d.message.content) || "";
     } else {
       const r = await fetch("https://api.anthropic.com/v1/messages", {
@@ -132,16 +135,17 @@ ${kasus}`;
         headers: { "content-type": "application/json", "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
         body: JSON.stringify({
           model: env.ANTHROPIC_MODEL || "claude-sonnet-5-5",
-          max_tokens: 7000,
+          max_tokens: 9000,
           messages: [{ role: "user", content: prompt }],
         }),
       });
       const d = await r.json();
       if (!r.ok) return json({ error: (d && d.error && d.error.message) || "Gagal memanggil model." }, 502);
+      meta.provider = "Anthropic"; meta.model = env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
       text = (d.content || []).filter((x) => x.type === "text").map((x) => x.text).join("");
     }
     if (!text) return json({ error: "Model mengembalikan jawaban kosong." }, 502);
-    return json({ text });
+    return json({ text, meta });
   } catch (e) {
     return json({ error: "Gagal terhubung ke layanan AI." }, 502);
   }
