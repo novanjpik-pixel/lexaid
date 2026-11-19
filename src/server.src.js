@@ -324,6 +324,8 @@ function tagText(x, tag) {
   const c = m[1].match(/^\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*$/);
   return (c ? c[1] : decEnt(m[1])).trim();
 }
+const hostOf = (u) => { try { return new URL(u).hostname.toLowerCase().replace(/^www\./, ""); } catch (e) { return ""; } };
+const DOMRE = /^[a-z0-9]([a-z0-9.-]{0,60})[a-z0-9]$/i;
 function parseRss(xml, via, nama) {
   xml = String(xml);
   let blocks = [...xml.matchAll(/<item[\s>]([\s\S]*?)<\/item>/g)].map((m) => m[1]);
@@ -344,8 +346,10 @@ function parseRss(xml, via, nama) {
       if (u) { try { link = decodeURIComponent(u[1]); } catch (e) {} }
     }
     if (via === "rss") sumber = nama;
+    const su = (x.match(/<source[^>]*\surl=["']([^"']+)["']/i) || [])[1] || "";
+    const dom = hostOf(via === "gnews" && su ? su : link);
     const snippet = via === "bing" || via === "rss" ? stripTags(tagText(x, "description") || tagText(x, "summary") || tagText(x, "content:encoded")).slice(0, 400) : "";
-    return { judul, link, tgl, sumber: sumber || "-", snippet };
+    return { judul, link, tgl, sumber: sumber || "-", snippet, dom };
   }).filter((i) => i.judul && /^https?:\/\//i.test(i.link) && !isNaN(i.tgl));
 }
 function parseGdelt(txt) {
@@ -356,9 +360,20 @@ function parseGdelt(txt) {
   }).filter((i) => i.judul && i.link && !isNaN(i.tgl));
 }
 async function getText(url, ms = 12000) {
-  const r = await withTimeout(fetch(url, { headers: { "user-agent": UA, accept: "application/rss+xml,application/xml,text/xml,application/json,*/*" } }), ms, "timeout");
-  if (!r.ok) throw new Error("HTTP " + r.status);
-  return r.text();
+  let last;
+  for (let n = 0; n < 2; n++) {
+    try {
+      const r = await withTimeout(fetch(url, { headers: { "user-agent": UA, accept: "application/rss+xml,application/xml,text/xml,application/json,*/*" } }), ms, "timeout");
+      if (r.status === 429 || r.status >= 500) { last = new Error("HTTP " + r.status); if (n === 0) await sleep(2500); continue; }
+      if (!r.ok) throw Object.assign(new Error("HTTP " + r.status), { final: true });
+      return await r.text();
+    } catch (e) {
+      if (e && e.final) throw e;
+      last = new Error(String((e && e.message) || e) + (e && e.cause && e.cause.code ? " (" + e.cause.code + ")" : ""));
+      if (n === 0) await sleep(1500);
+    }
+  }
+  throw last;
 }
 const EDISI = {
   id: { gl: "hl=id&gl=ID&ceid=ID:id", bing: "id-ID", gd: "sourcelang:indonesian" },
@@ -405,16 +420,27 @@ const dayMs = 86400000;
 const wib = (d, end) => Date.parse(d + (end ? "T23:59:59+07:00" : "T00:00:00+07:00"));
 const ymd = (ms) => new Date(ms).toISOString().slice(0, 10);
 const gdt = (ms) => new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "");
-async function fetchSource(kw, ed, via, r, site) {
+async function fetchSource(kw, ed, via, r, site, excl, pages) {
   const E = EDISI[ed];
   if (via === "gnews") {
-    const q = kw + " after:" + r.f + " before:" + ymd(r.b + dayMs);
+    const q = kw + (site ? " site:" + site : "") + (excl || []).map((d) => " -site:" + d).join("") + " after:" + r.f + " before:" + ymd(r.b + dayMs);
     return parseRss(await getText("https://news.google.com/rss/search?q=" + encodeURIComponent(q) + "&" + E.gl), "gnews");
   }
-  if (via === "bing") return parseRss(await getText("https://www.bing.com/news/search?q=" + encodeURIComponent(kw + (site ? " site:" + site : "")) + "&format=rss&setmkt=" + E.bing), "bing");
+  if (via === "bing") {
+    // Bing News RSS bisa dipaginasi lewat parameter first (10 hasil per halaman); berhenti bila halaman kosong atau tidak ada hasil baru.
+    const out = [], seen = new Set(), q = encodeURIComponent(kw + (site ? " site:" + site : ""));
+    for (let pg = 0; pg < (pages || 1); pg++) {
+      let items;
+      try { items = parseRss(await getText("https://www.bing.com/news/search?q=" + q + "&format=rss&setmkt=" + E.bing + (pg ? "&first=" + (pg * 10 + 1) : "")), "bing"); } catch (e) { if (!pg) throw e; break; }
+      const fresh = items.filter((i) => !seen.has(i.link));
+      fresh.forEach((i) => { seen.add(i.link); out.push(i); });
+      if (items.length < 5 || !fresh.length) break;
+    }
+    return out;
+  }
   if (via === "gdelt") {
     const q = "(" + kw + ") " + E.gd;
-    return parseGdelt(await getText("https://api.gdeltproject.org/api/v2/doc/doc?query=" + encodeURIComponent(q) + "&mode=artlist&format=json&maxrecords=75&startdatetime=" + gdt(r.a) + "&enddatetime=" + gdt(r.b), 15000));
+    return parseGdelt(await getText("https://api.gdeltproject.org/api/v2/doc/doc?query=" + encodeURIComponent(q) + "&mode=artlist&format=json&maxrecords=250&startdatetime=" + gdt(r.a) + "&enddatetime=" + gdt(r.b), 15000));
   }
   return [];
 }
@@ -445,25 +471,56 @@ async function pantauCari(request, env) {
   const eds = ["id", "en"].filter((e) => (Array.isArray(b.edisi) ? b.edisi : ["id", "en"]).includes(e));
   const vias = ["gnews", "bing", "gdelt", "rss"].filter((v) => (Array.isArray(b.sumber) ? b.sumber : ["gnews", "bing", "rss"]).includes(v));
   if (!eds.length || !vias.length) return json({ error: "Pilih minimal satu konteks dan satu sumber." }, 400);
+  const part = typeof b.site === "string" && DOMRE.test(b.site) ? b.site.toLowerCase() : "";
+  const excl = (Array.isArray(b.excl) ? b.excl : []).map((d) => String(d).toLowerCase()).filter((d) => DOMRE.test(d)).slice(0, 30);
+  const pages = Math.max(1, Math.min(8, parseInt(b.pages, 10) || 1));
   const plan = [];
   kws.forEach((kw) => eds.forEach((ed) => vias.forEach((via) => {
     if (via === "rss") return;
-    plan.push({ kw, ed, via });
+    if (via === "gdelt") return;
+    if (via === "gnews" && (part || excl.length)) { plan.push({ kw, ed, via, site: part, excl }); return; }
+    plan.push({ kw, ed, via, pages });
     if (via === "bing" && b.perluas) (BING_SITES[ed] || []).slice(0, 6).forEach((site) => plan.push({ kw, ed, via, site }));
   })));
   if (vias.includes("rss")) feedsOf(env).filter((f) => eds.includes(f.ed)).forEach((f) => plan.push({ feed: f, via: "rss", ed: f.ed }));
-  const res = await pool(plan.map((p) => async () => {
+  const gdelt = vias.includes("gdelt") ? eds.map((ed) => ({ gd: true, ed, via: "gdelt" })) : [];
+  const runTask = async (p) => {
     if (p.feed) {
       const out = [];
       (await readFeed(p.feed)).forEach((it) => kws.forEach((k) => { if (kwMatch(k, it.judul + " " + it.snippet)) out.push(Object.assign({}, it, { kw: k, ed: p.ed, via: "rss" })); }));
       return out;
     }
-    return (await fetchSource(p.kw, p.ed, p.via, r, p.site)).map((i) => Object.assign(i, { kw: p.kw, ed: p.ed, via: p.via }));
-  }), 6);
-  const detail = [];
+    return (await fetchSource(p.kw, p.ed, p.via, r, p.site, p.excl, p.pages)).map((i) => Object.assign(i, { kw: p.kw, ed: p.ed, via: p.via }));
+  };
+  const runGdelt = async (p) => {
+    const q = kws.map((k) => (/\s/.test(k) ? '"' + k.replace(/"/g, "") + '"' : k)).join(" OR ");
+    return (await fetchSource(q, p.ed, "gdelt", r)).map((i) => {
+      const hay = i.judul + " " + i.snippet;
+      return Object.assign(i, { kw: kws.find((k) => kwMatch(k, hay)) || kws[0], ed: p.ed, via: "gdelt" });
+    });
+  };
+  const gdRun = (async () => {
+    const out = [];
+    for (let i = 0; i < gdelt.length; i++) {
+      if (i) await sleep(5300);
+      try { out.push({ ok: true, v: await runGdelt(gdelt[i]) }); } catch (e) { out.push({ ok: false, e: String((e && e.message) || e) }); }
+    }
+    return out;
+  })();
+  const [resMain, resGd] = await Promise.all([pool(plan.map((p) => () => runTask(p)), 4), gdRun]);
+  const res = resMain.concat(resGd);
+  plan.push(...gdelt);
+  const detail = [], penuh = [], gagal = [];
   const galat = {};
   const map = new Map();
   res.forEach((x, i) => {
+    if (!x.ok && !plan[i].feed && plan[i].kw) gagal.push({ kw: plan[i].kw, ed: plan[i].ed, via: plan[i].via });
+    if (x.ok && plan[i].via === "gnews" && x.v.length >= 95) {
+      const cnt = new Map();
+      x.v.forEach((it) => { if (it.dom && !(plan[i].excl || []).includes(it.dom)) cnt.set(it.dom, (cnt.get(it.dom) || 0) + 1); });
+      penuh.push({ kw: plan[i].kw, ed: plan[i].ed, via: "gnews", n: x.v.length, site: !!plan[i].site, doms: [...cnt].sort((a, b) => b[1] - a[1]).slice(0, 14).map((d) => d[0]) });
+    }
+    if (x.ok && plan[i].via === "gdelt" && x.v.length >= 245) penuh.push({ kw: "", ed: plan[i].ed, via: "gdelt", n: x.v.length, site: false, doms: [] });
     if (!x.ok) { const k = plan[i].via; galat[k] = (galat[k] || 0) + 1; const nm = plan[i].feed ? plan[i].feed.nama : k; const d = nm + ": " + String(x.e).slice(0, 60); if (!detail.includes(d) && detail.length < 12) detail.push(d); return; }
     x.v.forEach((it) => {
       if (it.tgl < r.a || it.tgl > r.b) return;
@@ -482,12 +539,12 @@ async function pantauCari(request, env) {
     return {
       id: hex(sha256(U8(normTitle(c.judul) + c.sumber))).slice(0, 12), judul: c.judul, sumber: c.sumber, tgl: new Date(c.tgl).toISOString(),
       link: c.link, tok: hmacHex(secret, c.link).slice(0, 24), edisi: c.eds.size > 1 ? "id+en" : [...c.eds][0], via: c.via,
-      kata_kunci: [...c.kws], snippet: c.snippet, cocok: cocok || !toks.length,
+      kata_kunci: [...c.kws], snippet: c.snippet, dom: c.dom, cocok: cocok || !toks.length,
     };
   });
   if (b.strict) items = items.filter((i) => i.cocok);
   items.sort((x, y) => (y.tgl > x.tgl ? 1 : -1));
-  return json({ items: items.slice(0, 400), galat, detail, dicoba: plan.length });
+  return json({ items: items.slice(0, 700), galat, detail, penuh, gagal, dicoba: plan.length });
 }
 
 function blockedHost(h) {
@@ -611,7 +668,7 @@ function pgPool(env) {
   if (!PGP) {
     PGP = (async () => {
       let pg;
-      try { pg = await import("pg"); } catch (e) { throw new Error('paket "pg" belum terpasang (tambahkan ke package.json)'); }
+      try { pg = await import("pg"); } catch (e) { throw new Error('driver "pg" tidak tersedia di runtime ini (WinterJS tidak menjalankan paket npm); pakai Supabase: isi SUPABASE_URL dan SUPABASE_SERVICE_KEY'); }
       const Pool = (pg.default && pg.default.Pool) || pg.Pool;
       const pool = new Pool({
         host: env.DB_HOST, port: Number(env.DB_PORT) || 5432, database: env.DB_NAME, user: env.DB_USERNAME, password: env.DB_PASSWORD,
@@ -688,7 +745,7 @@ const Store = {
 async function riwayat(path, request, env, user) {
   const kind = storeKind(env);
   if (path === "/api/riwayat/status") {
-    if (kind === "pg") { try { await pgPool(env); } catch (e) { return json({ aktif: false, hari: retention(env), alasan: "Database belum bisa dipakai: " + String((e && e.message) || e).slice(0, 120) }); } }
+    if (kind === "pg") { try { await pgPool(env); } catch (e) { return json({ aktif: false, hari: retention(env), alasan: "Database belum bisa dipakai: " + String((e && e.message) || e).slice(0, 220) }); } }
     return json({ aktif: !!kind, hari: retention(env) });
   }
   if (!kind) return json({ error: "Penyimpanan riwayat belum diaktifkan oleh pengelola." }, 501);
