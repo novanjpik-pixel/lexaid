@@ -115,6 +115,38 @@ button:disabled{opacity:.55}
 .svrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}.svrow .ck2{margin:0}
 .imp{margin-top:12px;border:1px dashed var(--bd);border-radius:14px;padding:12px}.imp textarea{min-height:90px;font-size:14px;font-family:ui-monospace,Menlo,monospace}.imp .row{margin-top:8px}
 .hint{font-size:12.5px;color:var(--mut);margin-top:4px}
+.lh{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:8px}
+.legend{font-size:12.5px;color:var(--mut);margin:0 0 10px;padding:8px 12px;border-left:3px solid var(--gold);background:color-mix(in srgb,var(--gold) 8%,transparent);border-radius:0 10px 10px 0;line-height:1.7}
+.legend .lk{color:var(--acc);font-weight:700;text-decoration:underline}.legend .fkb{display:inline-block;padding:1px 9px;border:1px solid var(--gold);border-radius:99px;color:var(--ink);font-weight:600;font-size:12px}
+.rs{padding:13px 0;border-top:1px solid var(--bd)}.rs:first-child{border-top:0}
+.rs-m{font-size:12.5px;color:var(--mut)}.rs-m b{color:var(--ink)}
+.rs-t{margin:3px 0 2px;font:600 17px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}.rs-t a{color:var(--acc);text-decoration:underline;text-underline-offset:3px}.rs-t a:hover{color:var(--gold2)}.rs-t a span{font-size:13px;opacity:.8}
+.rs-sn{margin:2px 0 4px;font-size:13.5px;color:var(--mut)}
+.rs-ai{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 2px;font-size:12.5px}
+.rs-ai .chip{margin:0}.chip.warn{border-color:var(--warn);color:var(--warn)}.chip.bad{border-color:var(--bad);color:var(--bad)}
+.rs-as{margin:6px 0 4px;font-size:13.5px}
+.act{background:transparent;color:var(--ink);border:1.5px solid var(--gold);box-shadow:none;padding:7px 14px;min-height:36px;font-size:13px;border-radius:99px}.act:hover{background:color-mix(in srgb,var(--gold) 16%,transparent)}
+.rs dl{margin:8px 0 0;padding:10px 12px;border-radius:12px;background:var(--inp);display:grid;grid-template-columns:130px 1fr;gap:4px 10px;font-size:13px}.rs dt{color:var(--mut);font-weight:600}.rs dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:520px){.rs dl{grid-template-columns:1fr}}
+#pchips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 8px;font-size:13px}#pchips:empty{display:none}
+.chipx{background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--ink);border:1px solid var(--gold);box-shadow:none;padding:4px 11px;min-height:30px;font-size:12.5px;border-radius:99px}.chipx.all{background:transparent;border-color:var(--bd);color:var(--mut)}
+#pai .pb{margin:8px 0}#pai .row{margin-top:8px}
+.stale{font-size:13px;color:var(--warn);margin:0 0 8px}
+/* ===== Dropdown bertema (menggantikan daftar pilihan putih/biru bawaan browser) ===== */
+.fx{position:relative;width:100%}
+.fx-native{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;pointer-events:none}
+.fx-b{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;font:inherit;font-size:16px;font-weight:400;padding:11px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--inp);color:var(--ink);box-shadow:none;min-height:46px;cursor:pointer}
+.fx-b:hover,.fx-b:focus-visible,.fx-b[aria-expanded=true]{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 22%,transparent);outline:0}
+.fx-b span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fx-b i{font-style:normal;color:var(--gold);flex:none;transition:transform .15s}.fx-b[aria-expanded=true] i{transform:rotate(180deg)}
+.fx-l{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:60;margin:0;padding:6px;list-style:none;max-height:280px;overflow:auto;background:var(--bg);border:1px solid var(--gold);border-radius:14px;box-shadow:0 16px 36px rgba(0,0,0,.42)}
+.fx-l.up{top:auto;bottom:calc(100% + 6px)}
+.fx-l li{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--ink);font-size:15px;line-height:1.35}
+.fx-l li.on:not(.act){background:color-mix(in srgb,var(--gold) 18%,transparent);font-weight:700}
+.fx-l li.on:after{content:"\2713";flex:none}
+.fx-l li.act{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--btn);font-weight:700}
+.fl .fx-b{padding:8px 10px;font-size:14px;min-height:40px}
+.lh .fx{width:auto;min-width:220px;display:inline-block;vertical-align:middle}.lh .fx-b{padding:7px 10px;font-size:14px;min-height:38px}
 </style>
 </head>
 <body>
@@ -284,7 +316,7 @@ button:disabled{opacity:.55}
    <h4>Arti istilah di hasil</h4>
    <dl><dt>Relevansi</dt><dd>0-100: seberapa dekat berita dengan fokus Anda. Yang tidak relevan disaring.</dd><dt>Sentimen</dt><dd>Nada pemberitaan terhadap fokus atau pihak utamanya (positif, netral, negatif). Bukan sekadar apakah peristiwanya buruk.</dd><dt>Dasar analisis</dt><dd>Bagian berita yang dibaca AI: isi berita, ringkasan pencarian, judul saja, atau teks unggahan Anda. Judul saja = rincian lebih terbatas.</dd><dt>Alert</dt><dd>Peringatan otomatis dari aturan statistik (lonjakan, sentimen negatif naik, aktor banyak disorot). Bukan prediksi.</dd></dl>
    <h4>Batasan yang jujur</h4>
-   <ul><li>Sumber aktif adalah <b>berita publik</b>. X, Instagram, dan TikTok tidak diambil otomatis; gunakan fitur impor.</li><li>Penilaian AI bisa keliru. Buka berita aslinya (klik judul) sebelum mengambil keputusan.</li><li>Google News membatasi jumlah hasil per pencarian, jadi hasil bukan seluruh berita yang ada.</li></ul>
+   <ul><li>Sumber aktif adalah <b>berita publik</b>. X, Instagram, dan TikTok tidak diambil otomatis; gunakan fitur impor.</li><li>Penilaian AI bisa keliru. Buka berita aslinya (klik judul) sebelum mengambil keputusan.</li><li>Google News hanya memberi ±100 hasil per pencarian. Mode <b>Maksimal</b> membagi rentang waktu dan sumber otomatis sampai hasil tidak terpotong; bila masih ada yang penuh, kotak <b>Cakupan pencarian</b> memberi tahu bagian mana.</li></ul>
   </div></details>
   <section class="card" id="pcfg">
    <h2>Pantau Isu</h2>
@@ -317,7 +349,7 @@ button:disabled{opacity:.55}
    <details class="note" style="margin-top:12px"><summary>Pengaturan lanjutan</summary>
     <div class="g g2" style="margin-top:10px">
      <div><label for="pmax">Maksimal berita dianalisis AI</label><input id="pmax" type="number" min="10" max="300" value="60"><div class="mut">Makin banyak, makin lama dan makin besar pemakaian kuota AI.</div></div>
-     <div><label class="ck2" style="margin-top:20px"><input type="checkbox" id="pstrict" checked> Saring awal: judul/ringkasan memuat kata kunci</label><label class="ck2" style="margin-top:8px"><input type="checkbox" id="pperluas"> Perluas Bing per media (lebih banyak hasil, lebih lama)</label></div>
+     <div><label for="pcak">Cakupan pencarian</label><select id="pcak"><option value="maks">Maksimal: bagi rentang waktu dan sumber otomatis agar tidak terpotong (lebih lama)</option><option value="cepat">Cepat: satu putaran per periode (hasil bisa terpotong)</option></select><div class="mut">Google hanya memberi ±100 hasil per pencarian. Mode Maksimal mengulang pencarian pada rentang yang lebih sempit sampai semua hasil terambil.</div><label class="ck2" style="margin-top:12px" title="Bila dicentang, hasil yang judul/ringkasannya tidak memuat kata kunci disembunyikan. Matikan agar semua hasil pencarian tampil seperti di Google."><input type="checkbox" id="pstrict"> Saring awal: hanya yang judulnya memuat kata kunci</label><label class="ck2" style="margin-top:8px"><input type="checkbox" id="pperluas"> Perluas Bing per media (lebih banyak hasil, lebih lama)</label></div>
     </div>
    </details>
    <div class="row" style="margin-top:14px"><button id="pgo" type="button">Mulai Pantau</button><button class="s" id="pcancel" type="button" hidden>Hentikan</button><button class="s" id="pdemo" type="button">Isi contoh</button></div>
@@ -330,6 +362,8 @@ button:disabled{opacity:.55}
   <div id="pout" hidden>
    <div class="card xp"><div class="xt"><b>Unduh hasil pemantauan</b><small>Excel berisi rekap dan semua berita; Word dan PDF berisi kesimpulan issue</small></div><div class="xb" style="flex-wrap:wrap"><button id="pxl" type="button">Unduh Excel</button><button id="pdoc" type="button">Unduh Word</button><button id="ppdf" type="button">Unduh PDF</button></div><div id="pxmsg" class="err"></div></div>
    <details class="note guide" data-g="pantau-hasil"><summary>Cara membaca dashboard</summary><div class="gb"><ul><li><b>Kesimpulan</b> disusun AI hanya dari data yang terkumpul, mengikuti instruksi Anda.</li><li><b>Alert</b> menandai hal yang menonjol; klik filter untuk menelusurinya.</li><li><b>Klik batang</b> pada grafik Topik atau Media untuk memfilter tabel. Tombol <b>Detail</b> menampilkan ringkasan, aktor, lokasi, angka, alasan sentimen, dan dasar analisis.</li><li>Excel berisi <b>semua</b> berita (termasuk yang tidak relevan dan belum dianalisis) agar bisa Anda periksa sendiri.</li></ul></div></details>
+   <div class="note" id="pcov" style="margin:0 0 12px"></div>
+   <section class="card" id="pai"></section>
    <section class="card kes" id="pkes"></section>
    <section class="card" id="pal"><h2>Alert dan Insight Otomatis</h2><div id="pal-b"></div><div class="mut">Dihitung dengan aturan statistik sederhana atas hasil analisis AI; bukan prediksi.</div></section>
    <div class="card"><h2>Filter</h2>
@@ -339,14 +373,16 @@ button:disabled{opacity:.55}
      <div><label for="fm">Media</label><select id="fm"></select></div>
      <div><label for="ft">Topik</label><select id="ft"></select></div>
      <div><label for="fq">Cari kata</label><input id="fq" placeholder="judul atau ringkasan"></div>
-     <div><label class="ck2" style="margin-top:20px"><input type="checkbox" id="fr" checked> Hanya relevan</label></div>
+     <div><label class="ck2" style="margin-top:20px" title="Setelah dianalisis AI, sembunyikan berita yang dinilai tidak membahas fokus Anda. Yang belum dianalisis tetap tampil."><input type="checkbox" id="fr"> Sembunyikan yang dinilai tidak relevan</label></div>
     </div>
    </div>
    <div class="kpis" id="pkpi"></div>
    <div class="cg a"><div class="card"><h2>Tren Percakapan per Hari</h2><div class="cc"><canvas id="c_tren" role="img" aria-label="Grafik garis jumlah berita per hari menurut sentimen"></canvas></div></div><div class="card"><h2>Komposisi Sentimen</h2><div class="cc"><canvas id="c_sent" role="img" aria-label="Grafik donat komposisi sentimen"></canvas></div></div></div>
-   <div class="cg b"><div class="card"><h2>Topik Teratas</h2><div class="cc"><canvas id="c_topik" role="img" aria-label="Grafik batang topik teratas"></canvas></div></div><div class="card"><h2>Media Teratas</h2><div class="cc"><canvas id="c_media" role="img" aria-label="Grafik batang media teratas"></canvas></div></div></div>
+   <div class="cg b"><div class="card"><h2>Topik Teratas</h2><div class="hint" style="margin:-6px 0 6px">👆 Klik batang untuk memfilter daftar berita</div><div class="cc"><canvas id="c_topik" role="img" aria-label="Grafik batang topik teratas"></canvas></div></div><div class="card"><h2>Media Teratas</h2><div class="hint" style="margin:-6px 0 6px">👆 Klik batang untuk memfilter daftar berita</div><div class="cc"><canvas id="c_media" role="img" aria-label="Grafik batang media teratas"></canvas></div></div></div>
    <div class="cg b"><div class="card"><h2>Aktor Paling Disebut</h2><div class="cc"><canvas id="c_aktor" role="img" aria-label="Grafik batang aktor"></canvas></div></div><div class="card"><h2>Lokasi Paling Disebut</h2><div class="cc"><canvas id="c_lokasi" role="img" aria-label="Grafik batang lokasi"></canvas></div></div></div>
-   <section class="card"><h2>Daftar Berita <span class="mut" id="ptc"></span></h2><div class="tw" id="ptb"></div><div class="pg" id="ppg"></div></section>
+   <section class="card" id="plist"><div class="lh"><h2 style="margin:0">Hasil Pencarian <span class="mut" id="ptc"></span></h2><div><label for="fo" style="display:inline-flex;margin:0 6px 0 0">Urutkan</label><select id="fo" style="width:auto;padding:7px 10px;font-size:14px"><option value="tgl-desc">Terbaru</option><option value="tgl-asc">Terlama</option><option value="skor">Relevansi AI tertinggi</option><option value="neg">Sentimen negatif dulu</option><option value="media">Media A–Z</option></select></div></div>
+    <p class="legend"><b>Cara membaca:</b> <span class="lk">Judul ↗</span> membuka <b>berita asli</b> di tab baru. Tombol <span class="fkb">▸ Lihat analisis AI lengkap</span> menampilkan ringkasan, alasan sentimen, aktor, lokasi, dan angka kunci. Tombol <span class="fkb">✨ Analisis berita ini</span> menjalankan AI untuk satu berita. <b>Klik batang pada grafik</b> untuk memfilter daftar.</p>
+    <div id="pchips"></div><div id="ptb"></div><div class="pg" id="ppg"></div></section>
    <p class="foot" id="pfoot"></p>
   </div>
  </div>
@@ -656,7 +692,7 @@ const P$=id=>document.getElementById(id);
 const SL={positif:'Positif',negatif:'Negatif',netral:'Netral'};
 const VN={gnews:'Google News',bing:'Bing News',gdelt:'GDELT',rss:'Media (RSS)',impor:'Impor'};
 const DS={isi:'isi berita',ringkasan:'ringkasan pencarian',judul:'judul saja (rincian terbatas)',unggahan:'teks dari data impor Anda'};
-const TT={'Berita relevan':'Berita yang dinilai AI berkaitan dengan fokus Anda','Sentimen negatif':'Porsi berita bernada negatif terhadap fokus; perubahan dibanding paruh awal periode','Media unik':'Jumlah media/sumber berbeda yang memberitakan','Puncak harian':'Hari dengan berita terbanyak'};
+const TT={'Hasil pencarian':'Jumlah hasil pencarian yang sesuai filter saat ini (belum tentu sudah dianalisis AI)','Sentimen negatif':'Porsi berita bernada negatif terhadap fokus; perubahan dibanding paruh awal periode','Media unik':'Jumlah media/sumber berbeda yang memberitakan','Puncak harian':'Hari dengan berita terbanyak'};
 const nf=n=>Math.round(n).toLocaleString('id-ID');
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const dayOf=iso=>new Date(iso).toLocaleDateString('sv-SE',{timeZone:'Asia/Jakarta'});
@@ -679,8 +715,9 @@ function pInit(){
  P$('pgo').onclick=pMulai;P$('pcancel').onclick=()=>{if(PS){PS.abort=true;P$('pst').textContent='Menghentikan…'}};
  P$('pdemo').onclick=()=>{P$('pf').value='Program Makan Bergizi Gratis (MBG)';P$('pw').value='makan bergizi gratis\nMBG keracunan\nBadan Gizi Nasional';P$('pi').value='Petakan kritik utama publik, pihak yang paling disorot, dan risiko reputasi bagi pemerintah. Beri rekomendasi komunikasi.';kwCount()};
  ['fs','fe','fm','ft'].forEach(id=>P$(id).onchange=()=>{if(!PS)return;PS.f={...PS.f,sent:P$('fs').value,ed:P$('fe').value,media:P$('fm').value,topik:P$('ft').value};PS.page=0;renderAll()});
- P$('fq').oninput=()=>{if(!PS)return;PS.f.q=P$('fq').value;PS.page=0;renderTable();renderKpi();renderCharts()};
+ P$('fq').oninput=()=>{if(!PS)return;PS.f.q=P$('fq').value;PS.page=0;renderList();renderKpi();renderCharts();renderChips()};
  P$('fr').onchange=()=>{if(!PS)return;PS.f.rel=P$('fr').checked;PS.page=0;renderAll()};
+ P$('fo').onchange=()=>{if(!PS)return;PS.page=0;renderList()};
  P$('pxl').onclick=()=>pExport('xlsx');P$('pdoc').onclick=()=>pExport('docx');P$('ppdf').onclick=()=>pExport('pdf');
  try{matchMedia('(prefers-color-scheme: light)').addEventListener('change',()=>{if(PS&&!P$('pout').hidden)renderCharts()})}catch(e){}
  kwCount();
@@ -705,58 +742,125 @@ async function pMulai(){
  if(diffDays(f,t)>399)return perr('Periode maksimal 400 hari.');
  const vias=['gnews','bing','gdelt','rss'].filter(v=>P$('s_'+v).checked);
  if((!vias.length||!kws.length)&&!imp.rows.length)return perr('Pilih minimal satu sumber data.');
- const cfg={fokus:P$('pf').value.trim(),kws,f,t,eds:P$('pk').value.split(','),vias,instruksi:P$('pi').value.trim(),maxAI:Math.max(10,Math.min(300,+P$('pmax').value||60)),strict:P$('pstrict').checked,perluas:P$('pperluas').checked};
- PS={cfg,items:[],map:new Map(),kes:null,at:new Date(),abort:false,galat:{},galatDet:[],meta:null,errAI:0,errCari:0,lastErr:'',total:0,f:{sent:'',ed:'',media:'',topik:'',q:'',rel:true},sort:{k:'tgl',d:-1},page:0,exp:new Set()};
- ['fs','fe','fq'].forEach(i=>P$(i).value='');P$('fr').checked=true;
+ const cfg={fokus:P$('pf').value.trim(),kws,f,t,eds:P$('pk').value.split(','),vias,instruksi:P$('pi').value.trim(),maxAI:Math.max(10,Math.min(300,+P$('pmax').value||60)),strict:P$('pstrict').checked,perluas:P$('pperluas').checked,cakupan:P$('pcak').value};
+ PS={cfg,items:[],map:new Map(),kes:null,at:new Date(),abort:false,galat:{},galatDet:[],meta:null,errAI:0,errCari:0,lastErr:'',total:0,running:false,initial:false,f:{sent:'',ed:'',media:'',topik:'',q:'',rel:false},page:0,exp:new Set(),savedId:null};
+ ['fs','fe','fq'].forEach(i=>P$(i).value='');P$('fr').checked=false;P$('fo').value='tgl-desc';
  busy(true);P$('pout').hidden=true;
  try{
   mergeImport(imp);
   if(kws.length&&vias.length)await pKumpul();
-  if(!PS.items.length){perr(PS.errCari&&!PS.items.length?'Pengumpulan berita gagal: '+PS.lastErr:'Tidak ada berita ditemukan untuk kata kunci dan periode ini. Coba perluas periode atau ubah kata kunci.');return}
-  await pAnalisis();
+  if(!PS.items.length){perr(PS.errCari?'Pengumpulan berita gagal: '+PS.lastErr:'Tidak ada berita ditemukan untuk kata kunci dan periode ini. Coba perluas periode atau ubah kata kunci.');return}
+  /* Tahap 1: semua hasil pencarian langsung tampil, seperti di mesin pencari */
+  P$('pout').hidden=false;renderAll();P$('pout').scrollIntoView({behavior:'smooth'});
+  /* Tahap 2: analisis AI (sentimen dll.) menyusul bertahap */
+  PS.initial=true;
+  await pRunAI(pick(pending(),Math.max(cfg.maxAI,PS.items.filter(x=>x.impor).length)));
+  PS.initial=false;
+  if(PS.items.some(i=>i.ai&&i.ai.relevan)&&!PS.abort&&!PS.kes){pbar('Menyusun kesimpulan…',93);try{await pKes()}catch(e){PS.kesErr=e.message}}
+  PS.kesStale=false;renderAll();
+  if(!PS.abort)pSave();
  }catch(e){perr(e.message||'Pemantauan gagal.')}
- finally{
-  busy(false);
-  if(PS&&PS.items.length){
-   renderAll();P$('pout').hidden=false;
-   if(PS.items.some(i=>i.ai&&i.ai.relevan)&&!PS.abort&&!PS.kes){try{await pKes()}catch(e){PS.kesErr=e.message}}
-   renderAll();P$('pout').scrollIntoView({behavior:'smooth'});
-   if(!PS.abort)pSave();
-  }
- }
+ finally{if(PS)PS.initial=false;busy(false)}
 }
 function mergeItems(arr){
  arr.forEach(it=>{const cur=PS.map.get(it.id);if(cur){it.kata_kunci.forEach(k=>{if(!cur.kata_kunci.includes(k))cur.kata_kunci.push(k)});return}
   const n={...it,ai:null};PS.map.set(n.id,n);PS.items.push(n)})}
+function bisect(f,t){const n=diffDays(f,t)+1;if(n<=1)return null;const m=addDays(f,Math.floor((n-1)/2));return[[f,m],[addDays(m,1),t]]}
+const MAXREQ=800;
 async function pKumpul(){
- const c=PS.cfg,chunks=[];for(let i=0;i<c.kws.length;i+=4)chunks.push(c.kws.slice(i,i+4));
- const today=todayStr(),jobs=[];
- windows(c.f,c.t).forEach(w=>chunks.forEach(k=>{const v=c.vias.filter(x=>(x!=='bing'||diffDays(w[1],today)<=30)&&(x!=='rss'||diffDays(w[1],today)<=14));if(v.length)jobs.push({kw:k,f:w[0],t:w[1],v})}));
- const total=jobs.length;let done=0;if(!total)return;
- pbar('Mengumpulkan berita… 0/'+total,2);
- const worker=async()=>{while(jobs.length&&!PS.abort){const j=jobs.shift();
-  try{const r=await papi('/api/pantau/cari',{keywords:j.kw,from:j.f,to:j.t,edisi:c.eds,sumber:j.v,strict:c.strict,perluas:c.perluas});mergeItems(r.items);(r.detail||[]).forEach(d=>{if(!PS.galatDet.includes(d)&&PS.galatDet.length<12)PS.galatDet.push(d)});Object.entries(r.galat||{}).forEach(([k,n])=>PS.galat[k]=(PS.galat[k]||0)+n)}
-  catch(e){PS.errCari++;PS.lastErr=e.message}
-  done++;pbar('Mengumpulkan berita… '+done+'/'+total+' permintaan, '+nf(PS.items.length)+' berita unik',done/total*30)}};
- await Promise.all([worker(),worker()]);
- PS.total=PS.items.length;
-}
+ const c=PS.cfg,today=todayStr(),maks=c.cakupan!=='cepat',queue=[],has=v=>c.vias.includes(v);
+ PS.terpotong=[];PS.reqs=0;PS.cap=false;PS.splits=0;
+ const label=(j,p)=>p.kw+' \u00b7 '+(j.f===j.t?fmtD(j.f+'T12:00:00+07:00'):j.f+' s.d. '+j.t)+(j.site?' \u00b7 hanya '+j.site:'')+' ('+(p.ed==='id'?'Indonesia':'Internasional')+')';
+ const split=(j,p)=>{
+  if(!maks){PS.terpotong.push(label(j,p));return}
+  if(PS.reqs>=MAXREQ){PS.cap=true;PS.terpotong.push(label(j,p));return}
+  const h=bisect(j.f,j.t);
+  if(h){PS.splits++;h.forEach(x=>queue.push({k:'gnews',kws:[p.kw],f:x[0],t:x[1],eds:[p.ed],site:j.site,excl:j.excl,round:j.round}));return}
+  if(j.site){PS.terpotong.push(label(j,p));return}
+  const round=(j.round||0)+1,nd=(p.doms||[]).filter(d=>!(j.excl||[]).includes(d)).slice(0,8);
+  if(round>3||!nd.length){PS.terpotong.push(label(j,p));return}
+  PS.splits++;
+  nd.forEach(d=>queue.push({k:'gnews',kws:[p.kw],f:j.f,t:j.t,eds:[p.ed],site:d}));
+  queue.push({k:'gnews',kws:[p.kw],f:j.f,t:j.t,eds:[p.ed],excl:[...(j.excl||[]),...nd],round})};
+ /* Google News: per kata kunci x jendela waktu; rentang yang penuh dibagi lagi */
+ if(has('gnews'))c.kws.forEach(kw=>windows(c.f,c.t).forEach(w=>queue.push({k:'gnews',kws:[kw],f:w[0],t:w[1],eds:c.eds})));
+ /* Bing: berhalaman, hanya bila periode menyentuh 30 hari terakhir */
+ if(has('bing')&&diffDays(c.t,today)<=30)c.kws.forEach(kw=>queue.push({k:'bing',kws:[kw],f:c.f,t:c.t,eds:c.eds}));
+ /* RSS media: hanya berita terbaru (14 hari) */
+ if(has('rss')&&diffDays(c.t,today)<=14)for(let i=0;i<c.kws.length;i+=8)queue.push({k:'rss',kws:c.kws.slice(i,i+8),f:c.f,t:c.t,eds:c.eds});
+ /* GDELT: kata kunci digabung (OR), dibatasi laju oleh server */
+ if(has('gdelt'))for(let i=0;i<c.kws.length;i+=4)queue.push({k:'gdelt',kws:c.kws.slice(i,i+4),f:c.f,t:c.t,eds:c.eds});
+ let done=0;pbar('Mengumpulkan berita\u2026',2);
+ while(queue.length&&!PS.abort){
+  const j=queue.shift();PS.reqs++;
+  try{
+   const body={keywords:j.kws,from:j.f,to:j.t,edisi:j.eds||c.eds,sumber:[j.k],strict:c.strict,perluas:j.k==='bing'&&c.perluas};
+   if(j.k==='bing')body.pages=maks?6:2;if(j.site)body.site=j.site;if(j.excl)body.excl=j.excl;
+   const r=await papi('/api/pantau/cari',body);
+   mergeItems(r.items);(r.detail||[]).forEach(d=>{if(!PS.galatDet.includes(d)&&PS.galatDet.length<12)PS.galatDet.push(d)});
+   Object.entries(r.galat||{}).forEach(([k,n])=>PS.galat[k]=(PS.galat[k]||0)+n);
+   const gg=(r.gagal||[]).filter(x=>x.via==='gnews');
+   if(gg.length&&(j.retry||0)<2){await sleep(6000*(1+(j.retry||0)));queue.unshift({...j,eds:[...new Set(gg.map(x=>x.ed))],retry:(j.retry||0)+1})}
+   else if(gg.length)PS.errCari++;
+   (r.penuh||[]).forEach(p=>{if(p.via==='gnews')split(j,p);else if(p.via==='gdelt')PS.terpotong.push('GDELT: hasil penuh (250) pada '+j.f+' s.d. '+j.t+', mungkin ada yang terlewat')});
+  }catch(e){PS.errCari++;PS.lastErr=e.message}
+  done++;pbar('Mengumpulkan berita\u2026 '+done+' permintaan, antrean '+queue.length+', '+nf(PS.items.length)+' berita unik'+(PS.splits?' \u00b7 rentang dibagi '+PS.splits+'\u00d7 agar tidak terpotong':''),2+done/(done+queue.length)*28);
+  renderCov();await sleep(350)}
+ PS.total=PS.items.length;renderCov()}
+function covText(){
+ if(!PS||!PS.terpotong)return'';const t=PS.terpotong,cepat=PS.cfg.cakupan==='cepat';
+ return nf(PS.items.length)+' berita unik dari '+(PS.reqs||0)+' permintaan'+(cepat?' (mode Cepat)':'')+'. '+(t.length?t.length+' pencarian Google masih penuh (batas \u00b1100 per pencarian), mungkin ada berita yang belum terambil: '+t.slice(0,5).join('; ')+(t.length>5?'; dst.':''):(cepat?'Mode Cepat: rentang tidak dibagi otomatis.':'Semua pencarian Google selesai di bawah batas, tidak ada yang terpotong.'))+(PS.cap?' Pembagian dihentikan karena batas '+MAXREQ+' permintaan.':'')}
+function renderCov(){
+ const el=P$('pcov');if(!el)return;if(!PS||!PS.terpotong||!PS.reqs){el.hidden=true;return}el.hidden=false;
+ const t=PS.terpotong,cepat=PS.cfg.cakupan==='cepat';
+ el.innerHTML='<b>Cakupan pencarian:</b> '+nf(PS.items.length)+' berita unik dari '+PS.reqs+' permintaan'+(cepat?' (mode Cepat)':'')+'.'+(t.length?' <span style="color:var(--warn);font-weight:700">'+t.length+' pencarian Google masih penuh</span> (batas \u00b1100 per pencarian), jadi mungkin ada berita yang belum terambil:<ul style="margin:4px 0 4px;padding-left:18px">'+t.slice(0,5).map(x=>'<li>'+E(x)+'</li>').join('')+(t.length>5?'<li>dan '+(t.length-5)+' lainnya</li>':'')+'</ul>Cara menambah: kata kunci yang lebih spesifik, aktifkan \u201cPerluas Bing per media\u201d, atau kurangi periode.':(cepat?' Mode Cepat tidak membagi rentang otomatis: ganti ke <b>Maksimal</b> di Pengaturan lanjutan untuk hasil lebih banyak.':' Semua pencarian Google selesai di bawah batas, jadi tidak ada yang terpotong.'))+(PS.cap?' Pembagian dihentikan karena batas '+MAXREQ+' permintaan.':'')}
 const topTopics=()=>{const m=new Map();PS.items.forEach(i=>{if(i.ai&&i.ai.relevan)m.set(i.ai.topik,(m.get(i.ai.topik)||0)+1)});return[...m].sort((a,b)=>b[1]-a[1]).slice(0,12).map(x=>x[0])};
-async function pAnalisis(){
- const c=PS.cfg;
- const cand=[...PS.items].sort((a,b)=>((b.impor?1:0)-(a.impor?1:0))||(b.kata_kunci.length-a.kata_kunci.length)||((b.cocok?1:0)-(a.cocok?1:0))||(b.tgl>a.tgl?1:-1)).slice(0,Math.max(c.maxAI,PS.items.filter(x=>x.impor).length));
- PS.analisisN=cand.length;let streak=0,done=0;
- for(let i=0;i<cand.length&&!PS.abort;i+=8){
-  const b=cand.slice(i,i+8);let ok=false;
-  for(let a=0;a<2&&!ok&&!PS.abort;a++){
-   try{const r=await papi('/api/pantau/analisis',{items:b.map(x=>x.impor?{id:x.id,judul:x.judul,sumber:x.sumber,tgl:x.tgl,teks:x.teks,impor:true}:{id:x.id,judul:x.judul,sumber:x.sumber,tgl:x.tgl,link:x.link,tok:x.tok,snippet:x.snippet}),fokus:c.fokus,instruksi:c.instruksi,topikAda:topTopics()});
-    r.hasil.forEach(h=>{const it=PS.map.get(h.id);if(it&&!h.gagal)it.ai=h});PS.meta=r.meta;ok=true}
-   catch(e){PS.lastErr=e.message;if(a===0)await sleep(3000)}}
-  if(ok)streak=0;else{streak++;PS.errAI+=b.length;if(streak>=3)throw new Error('Analisis AI berhenti setelah 3 kegagalan berturut-turut: '+PS.lastErr)}
-  done+=b.length;pbar('Analisis AI… '+Math.min(done,cand.length)+'/'+cand.length+' berita',30+done/cand.length*60);
-  P$('pout').hidden=false;renderAll();
- }
+const pending=()=>PS.items.filter(i=>!i.ai&&!i.gagal);
+const failed=()=>PS.items.filter(i=>!i.ai&&i.gagal);
+const pick=(list,n)=>[...list].sort((a,b)=>((b.impor?1:0)-(a.impor?1:0))||(b.kata_kunci.length-a.kata_kunci.length)||((b.cocok?1:0)-(a.cocok?1:0))||(b.tgl>a.tgl?1:-1)).slice(0,n);
+async function pRunAI(list){
+ if(!PS||PS.running||!list.length)return;
+ const c=PS.cfg,before=PS.items.filter(i=>i.ai).length;
+ PS.running=true;PS.abort=false;PS.stopReason='';PS.aiTotal=list.length;PS.aiDone=0;
+ if(!PS.initial){P$('pgo').disabled=true}
+ let streak=0;renderAI();renderList();
+ try{
+  for(let i=0;i<list.length&&!PS.abort;i+=8){
+   const b=list.slice(i,i+8);let ok=false;
+   for(let a=0;a<2&&!ok&&!PS.abort;a++){
+    try{const r=await papi('/api/pantau/analisis',{items:b.map(x=>x.impor?{id:x.id,judul:x.judul,sumber:x.sumber,tgl:x.tgl,teks:x.teks,impor:true}:{id:x.id,judul:x.judul,sumber:x.sumber,tgl:x.tgl,link:x.link,tok:x.tok,snippet:x.snippet}),fokus:c.fokus,instruksi:c.instruksi,topikAda:topTopics()});
+     r.hasil.forEach(h=>{const it=PS.map.get(h.id);if(!it)return;if(h.gagal)it.gagal=true;else{it.ai=h;it.gagal=false}});PS.meta=r.meta;ok=true}
+    catch(e){PS.lastErr=e.message;if(a===0)await sleep(3000)}}
+   b.forEach(it=>{if(!it.ai&&!PS.abort)it.gagal=true});
+   if(ok)streak=0;else streak++;
+   PS.aiDone+=b.length;PS.errAI=failed().length;
+   if(PS.initial)pbar('Analisis AI… '+Math.min(PS.aiDone,list.length)+'/'+list.length+' berita',30+PS.aiDone/list.length*60);
+   renderAll();
+   if(streak>=3){PS.stopReason='Dihentikan setelah 3 kegagalan berturut-turut. Penyebab terakhir: '+PS.lastErr;break}
+  }
+ }finally{
+  PS.running=false;PS.errAI=failed().length;if(!PS.initial)P$('pgo').disabled=false;
+  if(PS.items.filter(i=>i.ai).length>before){PS.dirty=true;if(PS.kes)PS.kesStale=true}
+  renderAll()}
 }
+function renderAI(){
+ const el=P$('pai');if(!PS)return;
+ const tot=PS.items.length,ana=PS.items.filter(i=>i.ai).length,pend=pending().length,fl=failed().length;
+ let h='<h2>Analisis AI (sentimen, topik, aktor)</h2><p style="margin:0 0 4px"><b>'+nf(ana)+'</b> dari <b>'+nf(tot)+'</b> hasil pencarian sudah dianalisis AI'+(fl?' · <span style="color:var(--bad);font-weight:700">'+nf(fl)+' gagal</span>':'')+(pend?' · '+nf(pend)+' belum':'')+'.</p><div class="pb"><i style="width:'+Math.max(2,pct(ana,tot))+'%"></i></div>';
+ if(PS.running){h+='<div class="mut">⏳ Sedang menganalisis ('+nf(Math.min(PS.aiDone,PS.aiTotal))+' dari '+nf(PS.aiTotal)+' pada putaran ini). Semua hasil pencarian sudah bisa dibaca di bawah; label sentimen muncul bertahap.</div><div class="row"><button type="button" class="s" id="pai-stop">Hentikan analisis</button></div>'}
+ else{
+  if(fl&&PS.lastErr)h+='<p class="err" style="font-weight:500">Penyebab terakhir: '+E(PS.lastErr)+'<br><span class="mut">Biasanya kuota AI habis atau terlalu sering dipakai. Tunggu beberapa menit, lalu klik "Coba lagi".</span></p>';
+  if(PS.stopReason)h+='<p class="err" style="font-weight:500">'+E(PS.stopReason)+'</p>';
+  h+='<div class="row">'+(fl?'<button type="button" id="pai-retry">↻ Coba lagi yang gagal ('+nf(fl)+')</button>':'')+(pend?'<button type="button" class="'+(fl?'s':'')+'" id="pai-next">Analisis '+nf(Math.min(40,pend))+' berikutnya</button>':'')+(pend>40?'<button type="button" class="s" id="pai-all">Analisis semua yang tersisa ('+nf(pend)+')</button>':'')+'</div>';
+  if(!fl&&!pend)h+='<p class="mut" style="margin:6px 0 0">Semua hasil pencarian sudah dianalisis.</p>';
+  if(ST.aktif&&PS.dirty)h+='<div class="row"><button type="button" class="s" id="pai-save">Simpan versi terbaru ke riwayat</button><span class="hint" id="pai-sm"></span></div>'}
+ el.innerHTML=h;
+ const g=id=>P$(id);
+ if(g('pai-stop'))g('pai-stop').onclick=()=>{PS.abort=true;g('pai-stop').disabled=true};
+ if(g('pai-retry'))g('pai-retry').onclick=()=>{const l=failed();l.forEach(i=>i.gagal=false);PS.lastErr='';pRunAI(pick(l,l.length))};
+ if(g('pai-next'))g('pai-next').onclick=()=>pRunAI(pick(pending(),40));
+ if(g('pai-all'))g('pai-all').onclick=()=>{const n=pending().length;if(n>150&&!confirm('Menganalisis '+n+' berita memakan waktu lama dan banyak kuota AI. Lanjutkan?'))return;pRunAI(pick(pending(),n))};
+ if(g('pai-save'))g('pai-save').onclick=async()=>{g('pai-save').disabled=true;await pSave(g('pai-sm'));if(!PS.dirty)renderAI()}}
 function ringkasData(){
  const L=PS.items.filter(i=>i.ai&&i.ai.relevan),s=stats(L);
  const top=m=>[...m].sort((a,b)=>b[1].n-a[1].n).slice(0,8).map(([k,v])=>[k,v.n,v.neg]);
@@ -794,61 +898,78 @@ function makeAlerts(L){
 
 /* ---------- tampilan ---------- */
 function visible(){const f=PS.f,q=f.q.toLowerCase();return PS.items.filter(i=>{
- if(f.rel&&!(i.ai&&i.ai.relevan))return false;if(f.sent&&!(i.ai&&i.ai.sentimen===f.sent))return false;
+ if(f.rel&&i.ai&&!i.ai.relevan)return false;if(f.sent&&!(i.ai&&i.ai.sentimen===f.sent))return false;
  if(f.ed&&!i.edisi.includes(f.ed))return false;if(f.media&&i.sumber!==f.media)return false;if(f.topik&&!(i.ai&&i.ai.topik===f.topik))return false;
  if(q&&!(i.judul+' '+(i.ai?i.ai.ringkasan:'')).toLowerCase().includes(q))return false;return true})}
-function renderAll(){if(!PS)return;renderFilters();renderKes();renderAlerts();renderKpi();renderCharts();renderTable();
- const m=PS.meta;const sc={};PS.items.forEach(i=>sc[i.via]=(sc[i.via]||0)+1);P$('pfoot').innerHTML='Rincian sumber: '+(Object.entries(sc).map(([k,n])=>(VN[k]||k)+' '+nf(n)).join(', ')||'-')+'. Analisis AI'+(m&&m.model?' ('+E(m.provider+' / '+m.model)+')':'')+' dapat keliru; periksa berita asli sebelum mengambil keputusan.'+(PS.errAI?' '+PS.errAI+' berita gagal dianalisis.':'')+(PS.errCari?' '+PS.errCari+' permintaan pengumpulan gagal.':'')+(PS.galatDet&&PS.galatDet.length?' Sumber yang gagal diakses: '+PS.galatDet.map(E).join('; ')+'.':'')+(PS.impInfo?' Impor: '+E(PS.impInfo):'')}
+function renderAll(){if(!PS)return;renderCov();renderFilters();renderAI();renderKes();renderAlerts();renderKpi();renderCharts();renderChips();renderList();
+ const m=PS.meta;const sc={};PS.items.forEach(i=>sc[i.via]=(sc[i.via]||0)+1);P$('pfoot').innerHTML='Rincian sumber: '+(Object.entries(sc).map(([k,n])=>(VN[k]||k)+' '+nf(n)).join(', ')||'-')+'. Analisis AI'+(m&&m.model?' ('+E(m.provider+' / '+m.model)+')':'')+' dapat keliru; periksa berita asli sebelum mengambil keputusan.'+(failed().length?' '+failed().length+' berita gagal dianalisis AI (lihat tombol Coba lagi di atas).':'')+(PS.errCari?' '+PS.errCari+' permintaan pengumpulan gagal.':'')+(PS.galatDet&&PS.galatDet.length?' Sumber yang gagal diakses: '+PS.galatDet.map(E).join('; ')+'.':'')+(PS.impInfo?' Impor: '+E(PS.impInfo):'')}
 function renderFilters(){
- const L=PS.items.filter(i=>i.ai),opt=(id,vals,cur,all)=>{const e=P$(id);e.innerHTML='<option value="">'+all+'</option>'+vals.map(v=>'<option'+(v===cur?' selected':'')+' value="'+E(v)+'">'+E(v)+'</option>').join('')};
- const cnt=(f)=>{const m=new Map();L.forEach(i=>{const k=f(i);if(k)m.set(k,(m.get(k)||0)+1)});return[...m].sort((a,b)=>b[1]-a[1]).slice(0,60).map(x=>x[0])};
- opt('fm',cnt(i=>i.sumber),PS.f.media,'Semua');opt('ft',cnt(i=>i.ai.topik),PS.f.topik,'Semua')}
+ const L=PS.items.filter(i=>i.ai),LA=PS.items,opt=(id,vals,cur,all)=>{const e=P$(id);e.innerHTML='<option value="">'+all+'</option>'+vals.map(v=>'<option'+(v===cur?' selected':'')+' value="'+E(v)+'">'+E(v)+'</option>').join('')};
+ const cnt=(f,src)=>{const m=new Map();(src||L).forEach(i=>{const k=f(i);if(k)m.set(k,(m.get(k)||0)+1)});return[...m].sort((a,b)=>b[1]-a[1]).slice(0,60).map(x=>x[0])};
+ opt('fm',cnt(i=>i.sumber,LA),PS.f.media,'Semua');opt('ft',cnt(i=>i.ai.topik),PS.f.topik,'Semua');P$('fs').value=PS.f.sent;P$('fe').value=PS.f.ed;if(document.activeElement!==P$('fq'))P$('fq').value=PS.f.q;P$('fr').checked=PS.f.rel}
 function renderKes(){
  const k=PS.kes,el=P$('pkes');
  if(!k){el.innerHTML='<h2>Kesimpulan Isu</h2>'+(PS.kesErr?'<p class="err">Kesimpulan gagal disusun: '+E(PS.kesErr)+'</p>':'<p class="mut">Kesimpulan belum disusun.</p>')+'<button type="button" class="s" id="pkb">Susun kesimpulan</button>';
   P$('pkb').onclick=async()=>{P$('pkb').disabled=true;try{await pKes()}catch(e){PS.kesErr=e.message}renderKes()};return}
  const li=a=>(a||[]).map(x=>'<li>'+E(typeof x==='string'?x:(x.isu?x.isu+': '+x.penjelasan:JSON.stringify(x)))+'</li>').join('');
  const sec=(h,a)=>(a&&a.length)?'<h3>'+h+'</h3><ul>'+li(a)+'</ul>':'';
- el.innerHTML='<h2>'+E(k.judul||'Kesimpulan Isu')+'</h2>'+String(k.ringkasan_eksekutif||'').split(/\n+/).filter(Boolean).map(p=>'<p>'+E(p)+'</p>').join('')+sec('Isu Kunci',k.isu_kunci)+sec('Temuan Utama',k.temuan)+(k.sentimen_narasi?'<h3>Sentimen</h3><p>'+E(k.sentimen_narasi)+'</p>':'')+sec('Risiko',k.risiko)+sec('Rekomendasi',k.rekomendasi)+sec('Keterbatasan',k.keterbatasan)+'<p class="mut" style="margin-top:10px">Disusun AI hanya dari data yang terkumpul di atas. Verifikasi sebelum dipakai.</p>'}
+ el.innerHTML='<h2>'+E(k.judul||'Kesimpulan Isu')+'</h2>'+(PS.kesStale?'<p class="stale">⚠ Analisis bertambah sejak kesimpulan ini dibuat. <button type="button" class="s" id="pkr" style="padding:5px 12px;min-height:30px">Perbarui kesimpulan</button></p>':'')+String(k.ringkasan_eksekutif||'').split(/\n+/).filter(Boolean).map(p=>'<p>'+E(p)+'</p>').join('')+sec('Isu Kunci',k.isu_kunci)+sec('Temuan Utama',k.temuan)+(k.sentimen_narasi?'<h3>Sentimen</h3><p>'+E(k.sentimen_narasi)+'</p>':'')+sec('Risiko',k.risiko)+sec('Rekomendasi',k.rekomendasi)+sec('Keterbatasan',k.keterbatasan)+'<p class="mut" style="margin-top:10px">Disusun AI hanya dari data yang terkumpul di atas. Verifikasi sebelum dipakai.</p>';bindKes()}
+function bindKes(){const b=P$('pkr');if(b)b.onclick=async()=>{b.disabled=true;try{await pKes();PS.kesStale=false}catch(e){PS.kesErr=e.message}renderKes();pSaveDirty()}}
+function pSaveDirty(){PS.dirty=true;renderAI()}
 function renderAlerts(){const L=PS.items.filter(i=>i.ai&&i.ai.relevan);P$('pal-b').innerHTML=makeAlerts(L).map(a=>'<div class="al '+a.lv+'"><b>'+E(a.t)+'</b><small>'+E(a.d)+'</small></div>').join('')}
 function renderKpi(){
- const V=visible().filter(i=>i.ai),s=stats(V),n=s.n,rel=PS.items.filter(i=>i.ai&&i.ai.relevan).length,ana=PS.items.filter(i=>i.ai).length;
- let pk={d:'',n:0};s.days.forEach(d=>{const x=d.positif+d.negatif+d.netral;if(x>pk.n)pk={d:d.d,n:x}});
+ const V=visible(),VA=V.filter(i=>i.ai),s=stats(VA),n=s.n,rel=PS.items.filter(i=>i.ai&&i.ai.relevan).length,ana=PS.items.filter(i=>i.ai).length;
+ const byDay=new Map();V.forEach(i=>{const d=dayOf(i.tgl);byDay.set(d,(byDay.get(d)||0)+1)});
+ let pk={d:'',n:0};byDay.forEach((n2,d)=>{if(n2>pk.n)pk={d,n:n2}});
  const half=Math.floor(s.days.length/2),a=s.days.slice(0,half),b=s.days.slice(half),sm=(x,f)=>x.reduce((t,d)=>t+d[f],0),tt=x=>sm(x,'positif')+sm(x,'negatif')+sm(x,'netral');
  const dl=(tt(a)>=3&&tt(b)>=3)?pct(sm(b,'negatif'),tt(b))-pct(sm(a,'negatif'),tt(a)):null;
- const tm=[...s.media].sort((x,y)=>y[1].n-x[1].n)[0];
+ const mm=new Map();V.forEach(i=>mm.set(i.sumber,(mm.get(i.sumber)||0)+1));const tm=[...mm].sort((x,y)=>y[1]-x[1])[0];
  const K=(l,v,sub,c)=>'<div class="kpi" title="'+E(TT[l]||'')+'"><small>'+l+'</small><b'+(c?' style="color:'+c+'"':'')+'>'+v+'</b><span>'+sub+'</span></div>';
- P$('pkpi').innerHTML=K('Berita relevan',nf(rel),'dari '+nf(PS.items.length)+' terkumpul, '+nf(ana)+' dianalisis')+
-  K('Sentimen negatif',n?pct(s.sent.negatif,n)+'%':'-',dl===null?'perubahan belum dapat dihitung':(dl>0?'naik '+dl:dl<0?'turun '+(-dl):'tetap')+(dl===0?'':' poin vs paruh awal'),n&&pct(s.sent.negatif,n)>=50?'var(--bad)':'')+
-  K('Media unik',nf(s.media.size),tm?'terbanyak: '+E(tm[0]):'-')+
-  K('Puncak harian',pk.n?nf(pk.n)+' berita':'-',pk.n?fmtD(pk.d+'T12:00:00+07:00')+' · rata-rata '+(n/Math.max(1,s.days.length)).toFixed(1)+'/hari':'-')}
+ P$('pkpi').innerHTML=K('Hasil pencarian',nf(V.length),'dari '+nf(PS.items.length)+' terkumpul · '+nf(ana)+' dianalisis AI · '+nf(rel)+' relevan')+
+  K('Sentimen negatif',n?pct(s.sent.negatif,n)+'%':'-',n?(dl===null?'perubahan belum dapat dihitung':(dl>0?'naik '+dl:dl<0?'turun '+(-dl):'tetap')+(dl===0?'':' poin vs paruh awal'))+' · dari '+nf(n)+' berita yang dianalisis':'menunggu analisis AI',n&&pct(s.sent.negatif,n)>=50?'var(--bad)':'')+
+  K('Media unik',nf(mm.size),tm?'terbanyak: '+E(tm[0])+' ('+tm[1]+')':'-')+
+  K('Puncak harian',pk.n?nf(pk.n)+' berita':'-',pk.n?fmtD(pk.d+'T12:00:00+07:00')+' · rata-rata '+(V.length/Math.max(1,s.days.length)).toFixed(1)+'/hari':'-')}
 function tcol(){const s=getComputedStyle(document.documentElement),g=n=>s.getPropertyValue(n).trim();return{ok:g('--ok'),bad:g('--bad'),mut:g('--mut'),bd:g('--bd'),gold:g('--gold'),neu:'#7584a8'}}
 function mk(id,cfg){if(CH[id])try{CH[id].destroy()}catch(e){}CH[id]=new Chart(P$(id),cfg)}
 function renderCharts(){
  if(typeof Chart==='undefined'){return}
  const C=tcol();Chart.defaults.color=C.mut;Chart.defaults.borderColor=C.bd;Chart.defaults.font.family='system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';Chart.defaults.animation=false;
- const V=visible().filter(i=>i.ai),s=stats(V);
+ const VV=visible(),V=VV.filter(i=>i.ai),s=stats(V);
+ const tot=new Map();VV.forEach(i=>{const d=dayOf(i.tgl);tot.set(d,(tot.get(d)||0)+1)});
  const lab=s.days.map(d=>{const p=d.d.split('-');return p[2]+'/'+p[1]});
- mk('c_tren',{type:'line',data:{labels:lab,datasets:[['positif',C.ok],['netral',C.neu],['negatif',C.bad]].map(([k,c])=>({label:SL[k],data:s.days.map(d=>d[k]),borderColor:c,backgroundColor:c,borderWidth:2,tension:.3,pointRadius:s.days.length>40?0:3,pointHoverRadius:6}))},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{usePointStyle:true}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:12}},y:{beginAtZero:true,ticks:{precision:0}}}}});
+ mk('c_tren',{type:'line',data:{labels:lab,datasets:[{label:'Semua hasil pencarian',data:s.days.map(d=>tot.get(d.d)||0),borderColor:C.gold,backgroundColor:C.gold,borderWidth:3,tension:.3,pointRadius:s.days.length>40?0:3,pointHoverRadius:6}].concat([['positif',C.ok],['netral',C.neu],['negatif',C.bad]].map(([k,c])=>({label:SL[k]+' (dianalisis AI)',data:s.days.map(d=>d[k]),borderColor:c,backgroundColor:c,borderWidth:2,borderDash:[5,4],tension:.3,pointRadius:0,pointHoverRadius:5})))},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{usePointStyle:true}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:12}},y:{beginAtZero:true,ticks:{precision:0}}}}});
  mk('c_sent',{type:'doughnut',data:{labels:['Positif','Netral','Negatif'],datasets:[{data:[s.sent.positif,s.sent.netral,s.sent.negatif],backgroundColor:[C.ok,C.neu,C.bad],borderColor:'transparent',borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{usePointStyle:true}},tooltip:{callbacks:{label:c=>{const t=s.n||1;return c.label+': '+c.parsed+' ('+Math.round(c.parsed/t*100)+'%)'}}}}}});
  const bar=(id,m,key)=>{const a=[...m].sort((x,y)=>y[1].n-x[1].n).slice(0,10);
-  mk(id,{type:'bar',data:{labels:a.map(x=>x[0]),datasets:[{label:'Berita',data:a.map(x=>x[1].n),backgroundColor:C.gold,borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{afterLabel:c=>{const v=a[c.dataIndex][1];return v.neg+' bernada negatif'}}}},scales:{x:{beginAtZero:true,ticks:{precision:0}},y:{grid:{display:false},ticks:{callback:function(v){const l=this.getLabelForValue(v);return l.length>26?l.slice(0,25)+'…':l}}}},onClick:key?(e,els)=>{if(els.length){PS.f[key]=a[els[0].index][0];PS.page=0;renderAll()}}:undefined}})};
- bar('c_topik',s.topik,'topik');bar('c_media',s.media,'media');bar('c_aktor',s.aktor);bar('c_lokasi',s.lokasi)}
-function renderTable(){
- const V=visible(),{k,d}=PS.sort,key=i=>k==='tgl'?i.tgl:k==='judul'?i.judul.toLowerCase():k==='sumber'?i.sumber.toLowerCase():k==='topik'?(i.ai?i.ai.topik.toLowerCase():''):k==='sentimen'?(i.ai?i.ai.sentimen:''):(i.ai?i.ai.skor:-1);
- V.sort((a,b)=>{const x=key(a),y=key(b);return(x<y?-1:x>y?1:0)*d});
- const PG=20,np=Math.max(1,Math.ceil(V.length/PG));PS.page=Math.min(PS.page,np-1);const pg=V.slice(PS.page*PG,PS.page*PG+PG);
- P$('ptc').textContent='('+nf(V.length)+')';
- const th=(c,l)=>'<th data-k="'+c+'">'+l+(k===c?(d>0?' ▲':' ▼'):'')+'</th>';
- const rows=pg.map(i=>{const a=i.ai,open=PS.exp.has(i.id);
-  let r='<tr><td style="white-space:nowrap">'+fmtD(i.tgl)+'</td><td>'+(i.link?'<a href="'+E(safeUrl(i.link))+'" target="_blank" rel="noopener noreferrer">'+E(i.judul)+'</a>':'<b>'+E(i.judul)+'</b>')+(a&&a.ringkasan?'<small>'+E(a.ringkasan.slice(0,170))+'</small>':'')+'</td><td>'+E(i.sumber)+'</td><td>'+E(i.edisi)+'</td><td>'+(a?E(a.topik):'<span class="mut">belum dianalisis</span>')+'</td><td>'+(a?'<span class="sentp sp-'+a.sentimen+'">'+SL[a.sentimen]+'</span>':'-')+'</td><td>'+(a?a.skor:'-')+'</td><td><button type="button" class="s" data-x="'+E(i.id)+'" style="padding:6px 10px;min-height:32px">'+(open?'Tutup':'Detail')+'</button></td></tr>';
-  if(open)r+='<tr class="dr"><td colspan="8"><dl>'+(a?'<dt>Ringkasan</dt><dd>'+E(a.ringkasan)+'</dd><dt>Yang diangkat</dt><dd>'+E(a.diangkat||'-')+'</dd><dt>Alasan sentimen</dt><dd>'+E(a.alasan_sentimen||'-')+'</dd><dt>Lokasi</dt><dd>'+E(a.lokasi.join(', ')||'-')+'</dd><dt>Aktor</dt><dd>'+E(a.aktor.join(', ')||'-')+'</dd><dt>Angka kunci</dt><dd>'+E(a.angka_kunci.join('; ')||'-')+'</dd><dt>Dasar analisis</dt><dd>'+(DS[a.dasar]||'-')+'</dd>':'')+(i.penulis?'<dt>Penulis/akun</dt><dd>'+E(i.penulis)+'</dd>':'')+(i.impor?'<dt>Teks</dt><dd>'+E(i.teks)+'</dd>':'')+'<dt>Kata kunci</dt><dd>'+E(i.kata_kunci.join(', ')||'-')+'</dd><dt>Sumber data</dt><dd>'+E(VN[i.via]||i.via)+'</dd></dl></td></tr>';
-  return r}).join('');
- P$('ptb').innerHTML='<table class="dt"><thead><tr>'+th('tgl','Tanggal')+th('judul','Judul')+th('sumber','Media')+'<th>Konteks</th>'+th('topik','Topik')+th('sentimen','Sentimen')+th('skor','Relevansi')+'<th></th></tr></thead><tbody>'+(rows||'<tr><td colspan="8" class="mut">Tidak ada berita yang cocok dengan filter.</td></tr>')+'</tbody></table>';
- P$('ptb').querySelectorAll('th[data-k]').forEach(h=>h.onclick=()=>{const c=h.dataset.k;PS.sort=PS.sort.k===c?{k:c,d:-PS.sort.d}:{k:c,d:c==='tgl'||c==='skor'?-1:1};renderTable()});
- P$('ptb').querySelectorAll('button[data-x]').forEach(b=>b.onclick=()=>{const id=b.dataset.x;PS.exp.has(id)?PS.exp.delete(id):PS.exp.add(id);renderTable()});
- P$('ppg').innerHTML='<span>Halaman '+(PS.page+1)+' dari '+np+'</span><button type="button" class="s" id="pp1"'+(PS.page?'':' disabled')+'>Sebelumnya</button><button type="button" class="s" id="pp2"'+(PS.page<np-1?'':' disabled')+'>Berikutnya</button>';
- P$('pp1').onclick=()=>{PS.page--;renderTable()};P$('pp2').onclick=()=>{PS.page++;renderTable()}}
+  mk(id,{type:'bar',data:{labels:a.map(x=>x[0]),datasets:[{label:'Berita',data:a.map(x=>x[1].n),backgroundColor:C.gold,borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{afterLabel:c=>{const v=a[c.dataIndex][1];return v.neg+' bernada negatif'}}}},scales:{x:{beginAtZero:true,ticks:{precision:0}},y:{grid:{display:false},ticks:{callback:function(v){const l=this.getLabelForValue(v);return l.length>26?l.slice(0,25)+'…':l}}}},onClick:key?(e,els)=>{if(els.length){PS.f[key]=a[els[0].index][0];PS.page=0;renderAll()}}:undefined,onHover:key?(e,els)=>{if(e.native&&e.native.target)e.native.target.style.cursor=els.length?'pointer':'default'}:undefined}})};
+ const mmap=new Map();VV.forEach(i=>{const v=mmap.get(i.sumber)||{n:0,neg:0};v.n++;if(i.ai&&i.ai.sentimen==='negatif')v.neg++;mmap.set(i.sumber,v)});
+ bar('c_topik',s.topik,'topik');bar('c_media',mmap,'media');bar('c_aktor',s.aktor);bar('c_lokasi',s.lokasi)}
+function renderChips(){
+ const f=PS.f,a=[];if(f.sent)a.push(['sent','Sentimen: '+SL[f.sent]]);if(f.ed)a.push(['ed','Konteks: '+(f.ed==='id'?'Indonesia':'Internasional')]);if(f.media)a.push(['media','Media: '+f.media]);if(f.topik)a.push(['topik','Topik: '+f.topik]);if(f.q)a.push(['q','Kata: \u201c'+f.q+'\u201d']);if(f.rel)a.push(['rel','Menyembunyikan yang dinilai tidak relevan']);
+ P$('pchips').innerHTML=a.length?'<span class="mut">Filter aktif:</span> '+a.map(([k,l])=>'<button type="button" class="chipx" data-c="'+k+'" title="Klik untuk menghapus filter ini">'+E(l)+' \u2715</button>').join('')+(a.length>1?' <button type="button" class="chipx all" data-c="*">Hapus semua filter</button>':''):'';
+ P$('pchips').querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.c;if(k==='*')PS.f={sent:'',ed:'',media:'',topik:'',q:'',rel:false};else PS.f[k]=k==='rel'?false:'';PS.page=0;renderAll()})}
+function sortItems(V){
+ const m=P$('fo').value,sv=i=>i.ai?({negatif:0,netral:1,positif:2}[i.ai.sentimen]):3;
+ const cmp={'tgl-desc':(a,b)=>a.tgl<b.tgl?1:a.tgl>b.tgl?-1:0,'tgl-asc':(a,b)=>a.tgl<b.tgl?-1:a.tgl>b.tgl?1:0,skor:(a,b)=>(b.ai?b.ai.skor:-1)-(a.ai?a.ai.skor:-1),neg:(a,b)=>sv(a)-sv(b)||(a.tgl<b.tgl?1:-1),media:(a,b)=>a.sumber.toLowerCase()<b.sumber.toLowerCase()?-1:a.sumber.toLowerCase()>b.sumber.toLowerCase()?1:0}[m]||(()=>0);
+ return V.sort(cmp)}
+function renderList(){
+ const V=sortItems(visible()),PG=20,np=Math.max(1,Math.ceil(V.length/PG));PS.page=Math.min(PS.page,np-1);const pg=V.slice(PS.page*PG,PS.page*PG+PG);
+ P$('ptc').textContent='('+nf(V.length)+' berita)';
+ const cards=pg.map(i=>{const a=i.ai,open=PS.exp.has(i.id);
+  const status=a?(a.relevan?'':'<span class="chip warn" title="AI menilai berita ini tidak membahas fokus Anda">Dinilai tidak relevan</span>'):i.gagal?'<span class="chip bad">Analisis AI gagal</span>':(PS.running?'<span class="chip">\u23f3 Menunggu analisis AI</span>':'<span class="chip">Belum dianalisis AI</span>');
+  const sn=i.impor?i.teks:i.snippet;
+  const det=open&&a?'<dl><dt>Alasan sentimen</dt><dd>'+E(a.alasan_sentimen||'-')+'</dd><dt>Yang diangkat</dt><dd>'+E(a.diangkat||'-')+'</dd><dt>Lokasi</dt><dd>'+E(a.lokasi.join(', ')||'-')+'</dd><dt>Aktor</dt><dd>'+E(a.aktor.join(', ')||'-')+'</dd><dt>Angka kunci</dt><dd>'+E(a.angka_kunci.join('; ')||'-')+'</dd><dt>Dasar analisis</dt><dd>'+(DS[a.dasar]||'-')+'</dd><dt>Kata kunci</dt><dd>'+E(i.kata_kunci.join(', ')||'-')+'</dd></dl>':'';
+  return '<article class="rs"><div class="rs-m"><b>'+E(i.sumber)+'</b> \u00b7 '+fmtD(i.tgl)+' \u00b7 '+E(VN[i.via]||i.via)+(i.penulis?' \u00b7 '+E(i.penulis):'')+(i.kata_kunci.length?' \u00b7 kata kunci: '+E(i.kata_kunci.join(', ')):'')+'</div>'+
+   '<h3 class="rs-t">'+(i.link?'<a href="'+E(safeUrl(i.link))+'" target="_blank" rel="noopener noreferrer" title="Buka berita asli di tab baru">'+E(i.judul)+' <span aria-hidden="true">\u2197</span></a>':E(i.judul))+'</h3>'+
+   (sn?'<p class="rs-sn">'+E(sn.slice(0,240))+'</p>':'')+
+   '<div class="rs-ai">'+(a?'<span class="mut">Sentimen:</span><span class="sentp sp-'+a.sentimen+'">'+SL[a.sentimen]+'</span><span class="chip" title="Label topik dari AI">Topik: '+E(a.topik)+'</span><span class="chip" title="Kedekatan dengan fokus Anda, 0-100">Relevansi '+a.skor+'</span>':'')+status+'</div>'+
+   (a&&a.ringkasan?'<p class="rs-as"><b>Ringkasan AI:</b> '+E(a.ringkasan)+'</p>':'')+
+   '<div>'+(a?'<button type="button" class="act" data-x="'+E(i.id)+'">'+(open?'\u25be Sembunyikan analisis AI':'\u25b8 Lihat analisis AI lengkap')+'</button>':'<button type="button" class="act" data-a="'+E(i.id)+'"'+(PS.running?' disabled':'')+'>\u2728 Analisis berita ini</button>')+'</div>'+det+'</article>'}).join('');
+ P$('ptb').innerHTML=cards||'<p class="mut">Tidak ada berita yang cocok dengan filter.</p>';
+ P$('ptb').querySelectorAll('button[data-x]').forEach(b=>b.onclick=()=>{const id=b.dataset.x;PS.exp.has(id)?PS.exp.delete(id):PS.exp.add(id);renderList()});
+ P$('ptb').querySelectorAll('button[data-a]').forEach(b=>b.onclick=()=>{const it=PS.map.get(b.dataset.a);if(it){it.gagal=false;pRunAI([it])}});
+ P$('ppg').innerHTML=np>1?'<span>Halaman '+(PS.page+1)+' dari '+np+'</span><button type="button" class="s" id="pp1"'+(PS.page?'':' disabled')+'>\u2190 Sebelumnya</button><button type="button" class="s" id="pp2"'+(PS.page<np-1?'':' disabled')+'>Berikutnya \u2192</button>':'';
+ if(np>1){P$('pp1').onclick=()=>{PS.page--;renderList();P$('plist').scrollIntoView()};P$('pp2').onclick=()=>{PS.page++;renderList();P$('plist').scrollIntoView()}}}
+const renderTable=renderList;
 
 /* ---------- Ekspor ---------- */
 function colL(n){let s='';n++;while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26)}return s}
@@ -876,13 +997,13 @@ function buildXLSX(sheets){
  return new Blob([zip(files)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})}
 function pSheets(){
  const c=PS.cfg,rel=PS.items.filter(i=>i.ai&&i.ai.relevan),s=stats(rel),n=s.n,k=PS.kes;
- const R=[[xT('FGI Kertas Pantau – Rekap Pemantauan')],[],[xB('Fokus'),c.fokus||'-'],[xB('Kata kunci'),c.kws.join('; ')],[xB('Periode'),c.f+' s.d. '+c.t],[xB('Konteks'),c.eds.map(e=>e==='id'?'Indonesia':'Internasional').join(' + ')],[xB('Sumber'),c.vias.map(v=>(VN[v])).join(', ')+(PS.items.some(i=>i.impor)?(c.vias.length?', ':'')+'Impor':'')],[xB('Instruksi'),xW(c.instruksi||'-')],[xB('Dibuat'),fmtDate(PS.at)],[xB('Model AI'),PS.meta?(PS.meta.provider+' / '+PS.meta.model):'-'],[],
+ const R=[[xT('FGI Kertas Pantau – Rekap Pemantauan')],[],[xB('Fokus'),c.fokus||'-'],[xB('Kata kunci'),c.kws.join('; ')],[xB('Periode'),c.f+' s.d. '+c.t],[xB('Konteks'),c.eds.map(e=>e==='id'?'Indonesia':'Internasional').join(' + ')],[xB('Sumber'),c.vias.map(v=>(VN[v])).join(', ')+(PS.items.some(i=>i.impor)?(c.vias.length?', ':'')+'Impor':'')],[xB('Instruksi'),xW(c.instruksi||'-')],[xB('Cakupan pencarian'),xW(covText())],[xB('Dibuat'),fmtDate(PS.at)],[xB('Model AI'),PS.meta?(PS.meta.provider+' / '+PS.meta.model):'-'],[],
   [xH('Metrik'),xH('Nilai')],['Berita terkumpul',PS.items.length],['Berita dianalisis AI',PS.items.filter(i=>i.ai).length],['Berita relevan',n],['Positif',s.sent.positif],['Netral',s.sent.netral],['Negatif',s.sent.negatif],['Porsi negatif (%)',pct(s.sent.negatif,n)],[]];
  const blk=(t,m)=>{R.push([xH(t),xH('Berita'),xH('Negatif')]);[...m].sort((a,b)=>b[1].n-a[1].n).slice(0,15).forEach(([a,v])=>R.push([a,v.n,v.neg]));R.push([])};
  blk('Topik',s.topik);blk('Media',s.media);blk('Aktor',s.aktor);blk('Lokasi',s.lokasi);
  R.push([xH('Alert dan insight'),xH('Keterangan')]);makeAlerts(rel).forEach(a=>R.push([a.t,xW(a.d)]));
  const B=[['No','Tanggal (WIB)','Judul','Media','Penulis/akun','Konteks','Sumber data','Kata kunci','Relevan','Skor relevansi','Topik','Sentimen','Ringkasan','Lokasi','Aktor','Angka kunci','Yang diangkat','Alasan sentimen','Dasar analisis','Tautan'].map(xH)];
- [...PS.items].sort((a,b)=>b.tgl>a.tgl?1:-1).forEach((i,j)=>{const a=i.ai;B.push([j+1,{d:Date.parse(i.tgl)},xW(i.judul),i.sumber,i.penulis||'',i.edisi,VN[i.via]||i.via,i.kata_kunci.join('; '),a?(a.relevan?'Ya':'Tidak'):'Belum dianalisis',a?a.skor:'',a?a.topik:'',a?SL[a.sentimen]:'',a?xW(a.ringkasan):'',a?a.lokasi.join(', '):'',a?a.aktor.join(', '):'',a?xW(a.angka_kunci.join('; ')):'',a?xW(a.diangkat):'',a?xW(a.alasan_sentimen):'',a?(DS[a.dasar]||''):'',i.link])});
+ [...PS.items].sort((a,b)=>b.tgl>a.tgl?1:-1).forEach((i,j)=>{const a=i.ai;B.push([j+1,{d:Date.parse(i.tgl)},xW(i.judul),i.sumber,i.penulis||'',i.edisi,VN[i.via]||i.via,i.kata_kunci.join('; '),a?(a.relevan?'Ya':'Tidak'):(i.gagal?'Analisis gagal':'Belum dianalisis'),a?a.skor:'',a?a.topik:'',a?SL[a.sentimen]:'',a?xW(a.ringkasan):'',a?a.lokasi.join(', '):'',a?a.aktor.join(', '):'',a?xW(a.angka_kunci.join('; ')):'',a?xW(a.diangkat):'',a?xW(a.alasan_sentimen):'',a?(DS[a.dasar]||''):'',i.link])});
  const out=[{name:'Rekap',cols:[34,70,12],rows:R},{name:'Semua Berita',cols:[6,17,60,22,18,9,14,28,15,10,22,11,60,24,28,32,40,40,16,50],rows:B,freeze:1,filter:1}];
  if(k){const K=[[xT(k.judul||'Kesimpulan Isu')],[],...String(k.ringkasan_eksekutif||'').split(/\n+/).filter(Boolean).map(p=>[xW(p)])];
   const add=(h,a)=>{if(a&&a.length){K.push([],[xB(h)]);a.forEach(x=>K.push([xW('• '+(typeof x==='string'?x:(x.isu?x.isu+': '+x.penjelasan:JSON.stringify(x))))]))}};
@@ -925,15 +1046,18 @@ async function pExport(kind){
  bt.disabled=false;bt.textContent=old}
 
 /* ---------- Riwayat ---------- */
-async function pSave(){
- if(!ST.aktif||!P$('sv_pantau').checked||!PS)return;const m=P$('sv_msg_pantau');m.textContent='Menyimpan ke riwayat…';
- try{const c=PS.cfg;await papi('/api/riwayat/simpan',{kind:'pantau',title:((c.fokus||c.kws[0]||'Impor data')+' · '+c.f+' s.d. '+c.t).slice(0,150),payload:{cfg:c,items:PS.items,kes:PS.kes,meta:PS.meta,at:PS.at.toISOString(),galat:PS.galat,galatDet:PS.galatDet,errAI:PS.errAI,errCari:PS.errCari,total:PS.total,impInfo:PS.impInfo||''}});m.textContent='Tersimpan di riwayat akun Anda.'}
+async function pSave(msgEl){
+ if(!ST.aktif||!P$('sv_pantau').checked||!PS)return;const m=msgEl||P$('sv_msg_pantau');m.textContent='Menyimpan ke riwayat\u2026';
+ try{const c=PS.cfg;
+  if(PS.savedId){try{await fetch('/api/riwayat/hapus',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:PS.savedId})})}catch(e){}}
+  const r=await papi('/api/riwayat/simpan',{kind:'pantau',title:((c.fokus||c.kws[0]||'Impor data')+' \u00b7 '+c.f+' s.d. '+c.t).slice(0,150),payload:{cfg:c,items:PS.items,kes:PS.kes,meta:PS.meta,at:PS.at.toISOString(),galat:PS.galat,galatDet:PS.galatDet,errAI:PS.errAI,errCari:PS.errCari,total:PS.total,impInfo:PS.impInfo||'',terpotong:PS.terpotong||[],reqs:PS.reqs||0,cap:!!PS.cap}});
+  PS.savedId=r.id;PS.dirty=false;m.textContent='Tersimpan di riwayat akun Anda.'}
  catch(e){m.textContent='Riwayat gagal disimpan: '+e.message}}
-function pRestore(d){
+function pRestore(d,id){
  pInit();const c=d.cfg;
- PS={cfg:c,items:d.items||[],map:new Map((d.items||[]).map(i=>[i.id,i])),kes:d.kes||null,at:new Date(d.at),abort:false,galat:d.galat||{},galatDet:d.galatDet||[],meta:d.meta||null,errAI:d.errAI||0,errCari:d.errCari||0,lastErr:'',total:d.total||0,impInfo:d.impInfo||'',f:{sent:'',ed:'',media:'',topik:'',q:'',rel:true},sort:{k:'tgl',d:-1},page:0,exp:new Set()};
- P$('pf').value=c.fokus||'';P$('pw').value=(c.kws||[]).join('\n');P$('pi').value=c.instruksi||'';P$('pd1').value=c.f;P$('pd2').value=c.t;P$('pk').value=(c.eds||['id','en']).join(',');kwCount();
- ['fs','fe','fq'].forEach(i=>P$(i).value='');P$('fr').checked=true;P$('pmsg').innerHTML='';P$('sv_msg_pantau').textContent='Dibuka dari riwayat.';
+ PS={cfg:c,items:d.items||[],map:new Map((d.items||[]).map(i=>[i.id,i])),kes:d.kes||null,at:new Date(d.at),abort:false,galat:d.galat||{},galatDet:d.galatDet||[],meta:d.meta||null,errAI:d.errAI||0,errCari:d.errCari||0,lastErr:'',total:d.total||0,impInfo:d.impInfo||'',terpotong:d.terpotong||[],reqs:d.reqs||0,cap:!!d.cap,running:false,initial:false,f:{sent:'',ed:'',media:'',topik:'',q:'',rel:false},page:0,exp:new Set(),savedId:id||null};
+ P$('pf').value=c.fokus||'';P$('pw').value=(c.kws||[]).join('\n');P$('pi').value=c.instruksi||'';P$('pcak').value=c.cakupan||'maks';P$('pd1').value=c.f;P$('pd2').value=c.t;P$('pk').value=(c.eds||['id','en']).join(',');kwCount();
+ ['fs','fe','fq'].forEach(i=>P$(i).value='');P$('fr').checked=false;P$('fo').value='tgl-desc';P$('pmsg').innerHTML='';P$('sv_msg_pantau').textContent='Dibuka dari riwayat.';
  P$('pout').hidden=false;renderAll();P$('pout').scrollIntoView({behavior:'smooth'})}
 
 /* ---------- Impor data (CSV / teks) ---------- */
@@ -996,7 +1120,7 @@ async function loadRiwayat(){
 async function bukaRiwayat(id){
  try{const r=await fetch('/api/riwayat/buka',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id})});const j=await r.json().catch(()=>({}));
   if(r.status===401){sessionEnd();return}if(!r.ok)throw new Error(j.error||'Gagal membuka riwayat.');
-  if(j.kind==='law')lawRestore(j.payload);else{go('pantau');pRestore(j.payload)}}catch(e){alert(e.message)}}
+  if(j.kind==='law')lawRestore(j.payload);else{go('pantau');pRestore(j.payload,id)}}catch(e){alert(e.message)}}
 function lawRestore(p){go('law');F.forEach(f=>$('f_'+f[0]).value=(p.input.fields||{})[f[0]]||'');$('ev').value=p.input.ev||'';[...$('pos').options].forEach((o,i)=>{if(o.text===p.input.pos)$('pos').selectedIndex=i});prog();LAST={r:norm(p.r),input:p.input,at:new Date(p.at)};show(LAST.r,6);$('msg').innerHTML='';$('sv_msg_law').textContent='Dibuka dari riwayat.'}
 async function lawSave(){
  if(!ST.aktif||!$('sv_law').checked||!LAST)return;const m=$('sv_msg_law');m.textContent='Menyimpan ke riwayat\u2026';
@@ -1017,6 +1141,44 @@ $('lf').onsubmit=async e=>{e.preventDefault();const b=$('lb');b.disabled=true;b.
  catch(er){$('lm').textContent=er.message||'Gagal masuk.'}
  b.disabled=false;b.textContent='Masuk'};
 (async()=>{try{const r=await fetch('/api/me');if(r.ok){ME=(await r.json()).user;await loadStatus();enter();return}}catch(e){}go('login')})();
+/* ===== Dropdown bertema: <select> asli tetap jadi sumber nilai; tampilan daftar dibuat sendiri ===== */
+function fancy(sel){
+ if(sel._fx)return;sel._fx=1;
+ const wrap=document.createElement('div');wrap.className='fx';sel.parentNode.insertBefore(wrap,sel);wrap.appendChild(sel);
+ sel.classList.add('fx-native');sel.tabIndex=-1;sel.setAttribute('aria-hidden','true');
+ const btn=document.createElement('button'),list=document.createElement('ul');
+ btn.type='button';btn.className='fx-b';btn.setAttribute('role','combobox');btn.setAttribute('aria-haspopup','listbox');btn.setAttribute('aria-expanded','false');
+ list.className='fx-l';list.setAttribute('role','listbox');list.hidden=true;
+ const lab=sel.id?document.querySelector('label[for="'+sel.id+'"]'):null;
+ if(lab){if(!lab.id)lab.id='lb_'+sel.id;btn.setAttribute('aria-labelledby',lab.id);lab.addEventListener('click',e=>{e.preventDefault();btn.focus()})}
+ wrap.append(btn,list);
+ const card=()=>wrap.closest('.card');let isOpen=false,act=-1,typed='',tt=0;
+ const setOpen=o=>{isOpen=o;list.hidden=!o;btn.setAttribute('aria-expanded',o?'true':'false');const c=card();
+  if(o){act=sel.selectedIndex;mark();if(c){c.style.position='relative';c.style.zIndex='50'}
+   list.classList.remove('up');const r=btn.getBoundingClientRect();if(window.innerHeight-r.bottom<300&&r.top>300)list.classList.add('up');
+   const on=list.querySelector('li.on');if(on)on.scrollIntoView({block:'nearest'})}
+  else if(c){c.style.zIndex=''}};
+ const mark=()=>list.querySelectorAll('li').forEach((li,i)=>li.classList.toggle('act',i===act));
+ function sync(){const o=sel.options[sel.selectedIndex];btn.innerHTML='<span>'+E(o?o.text:'')+'</span><i aria-hidden="true">▾</i>';
+  list.innerHTML=[...sel.options].map((o,i)=>'<li role="option" data-i="'+i+'" aria-selected="'+(i===sel.selectedIndex)+'" class="'+(i===sel.selectedIndex?'on':'')+'">'+E(o.text)+'</li>').join('')}
+ const choose=i=>{if(i<0||i>=sel.options.length)return;if(sel.selectedIndex!==i){sel.selectedIndex=i;sel.dispatchEvent(new Event('change',{bubbles:true}))}setOpen(false);btn.focus()};
+ btn.addEventListener('click',()=>setOpen(!isOpen));
+ list.addEventListener('mousedown',e=>e.preventDefault());
+ list.addEventListener('mouseover',e=>{const li=e.target.closest('li');if(li){act=+li.dataset.i;mark()}});
+ list.addEventListener('click',e=>{const li=e.target.closest('li');if(li)choose(+li.dataset.i)});
+ btn.addEventListener('keydown',e=>{const n=sel.options.length;
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!isOpen)setOpen(true);else{act=Math.max(0,Math.min(n-1,(act<0?sel.selectedIndex:act)+(e.key==='ArrowDown'?1:-1)));mark();const li=list.children[act];if(li)li.scrollIntoView({block:'nearest'})}}
+  else if(e.key==='Home'||e.key==='End'){if(isOpen){e.preventDefault();act=e.key==='Home'?0:n-1;mark();list.children[act].scrollIntoView({block:'nearest'})}}
+  else if(e.key==='Enter'||e.key===' '){e.preventDefault();if(isOpen)choose(act);else setOpen(true)}
+  else if(e.key==='Escape'){if(isOpen){e.preventDefault();setOpen(false)}}
+  else if(e.key==='Tab'){if(isOpen)setOpen(false)}
+  else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){clearTimeout(tt);typed+=e.key.toLowerCase();tt=setTimeout(()=>typed='',700);const i=[...sel.options].findIndex(o=>o.text.toLowerCase().startsWith(typed));if(i>=0){if(isOpen){act=i;mark();list.children[i].scrollIntoView({block:'nearest'})}else choose(i)}}});
+ document.addEventListener('mousedown',e=>{if(isOpen&&!wrap.contains(e.target))setOpen(false)});
+ sel.addEventListener('change',sync);
+ new MutationObserver(sync).observe(sel,{childList:true,subtree:true,characterData:true});
+ ['value','selectedIndex'].forEach(p=>{const d=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,p);Object.defineProperty(sel,p,{get(){return d.get.call(sel)},set(v){d.set.call(sel,v);sync()},configurable:true})});
+ sync()}
+document.querySelectorAll('select').forEach(fancy);
 
 </script>
 </body>
